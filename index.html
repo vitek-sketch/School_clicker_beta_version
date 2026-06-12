@@ -1,0 +1,370 @@
+
+School_Clicker_Notebook_Edition.html
+Soubor
+Základ kolečko s nápisem Click
+
+ Škola (1. svět)
+
+ Sešit +1/s
+
+ Tužka +1/c 
+
+Učennice +3/s 
+
+Pr.sešit +5/s 
+
+Kamarád při testu +5/c -10/s 
+
+Lavice +10/s
+
+ Lore jako text na začátku: "Při jednom z tvých pranků jsi omylem zapálil školu a proto musíš zaplatit skole škodu 10 000 000Kč." 
+
+Hidden funkce: Gems (pink diamond emoji/picture) on click šance 1/1 000 na +1 gem 
+
+Test on click 1/100 šance 50%/50% buď: Test -10% Kč Nebo Ředitelské volno +3min time skip 
+
+Shop: 3min time skip-5 gems 5min time skip-7 gems 10min time skip-12 gems 30min time skip-20 gems 2xCash boost 3min-10gems 3x cash boost 2min-15gems
+
+Time skip je podle Kč/s
+
+Přidej druhý svět za 100 000Kč který bude mít progres bar hned pod tím Splaceno kde budou upgrady: Tahák 2.0 +15/c (2 000 Kč)
+Školní Wi-Fi +25/s (3 500 Kč)
+Parta šprtů +50/s (8 000 Kč)
+Třídní Discord +75/s (12 000 Kč)
+Soukromý učitel +150/s (25 000 Kč)
+Ředitelův oblíbenec +30/c (40 000 Kč)
+Maturitní guru +500/s (100 000 Kč) A když člověk bude mít plný progres bar tak na něj bude moc kliknout což přepne mapu na tento 2. svět
+
+Můžu to udělat, ale potřebuju aktuální School_Clicker_Full_Fixed.html jako zdroj.
+
+Ten soubor jsem sice vytvořil, ale v tomhle prostředí ho už nemůžu znovu otevřít a bezpečně upravit. Kdybych teď generoval nový soubor naslepo, hrozí, že rozbiju něco, co už funguje.
+
+Nahraj prosím soubor School_Clicker_Full_Fixed.html a já ti vrátím jednu kompletní verzi s:
+
+🌍 2. světem
+
+📊 druhým progress barem pod „Splaceno“
+
+🔓 odemčením po zaplnění prvního progress baru
+
+🖱️ kliknutím na plný progress bar se přepne mapa
+
+📚 všemi upgrady 2. světa, které jsi vypsal
+
+💰 správnými cenami a scalingem +25 %
+
+zachováním všech současných funkcí (gemy, boosty, eventy, time skipy)
+
+Po nahrání souboru ti pošlu rovnou hotový HTML soubor ke stažení. 
+
+
+
+School_Clicker_Full_Fixed(1).html
+Soubor
+
+Hotovo. Vytvořil jsem verzi s 2. světem:
+
+📥 School_Clicker_World2.html
+
+Přidal jsem:
+
+🌍 Progress bar pro odemčení 2. světa (100 000 Kč).
+
+🖱️ Kliknutí na progress bar po dosažení 100 000 Kč přepne do 2. světa.
+
+🎓 Změnu názvu světa.
+
+📚 Upgrady 2. světa:
+
+Tahák 2.0 +15/c
+
+Školní Wi-Fi +25/s
+
+Parta šprtů +50/s
+
+Třídní Discord +75/s
+
+Soukromý učitel +150/s
+
+Ředitelův oblíbenec +30/c
+
+Maturitní guru +500/s
+
+📈 Zdražování o 25 % i ve 2. světě.
+
+Otestuj ho. Pokud bude fungovat dobře, můžeme příště udělat ještě hezčí systém map (tlačítko „Cestovat“, vlastní pozadí pro každý svět, zamčené světy apod.). 
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>School Clicker Deluxe</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#8ec5fc,#e0c3fc);}
+.container{max-width:1050px;margin:auto;padding:15px;}
+.card{background:rgba(255,255,255,.92);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.15);}
+.top{display:flex;justify-content:space-between;gap:10px}
+.panel{font-size:20px;font-weight:bold}
+.hero{text-align:center;margin:15px 0}
+.clickbtn{width:140px;height:140px;border:none;border-radius:50%;font-size:28px;font-weight:bold;color:white;cursor:pointer;background:linear-gradient(135deg,#43a047,#2e7d32);}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px}
+.shopbtn{width:100%;padding:10px;margin:4px 0;border:none;border-radius:10px;cursor:pointer}
+.progress{height:20px;background:#ddd;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:#4caf50;width:0%}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="card">📖 Při jednom z tvých pranků jsi omylem zapálil školu a proto musíš zaplatit škole škodu 10 000 000 Kč.</div><br>
+
+<div class="top">
+<div class="card panel">💎 <span id="gems">0</span></div>
+<div class="card panel">💰 <span id="money">0 Kč</span></div>
+</div>
+
+<div id="eventMsg" class="card" style="display:none;text-align:center;font-weight:bold;margin-top:10px;"></div>
+
+<div class="hero">
+<h2 id='worldTitle'>🏫 Škola (1. svět)</h2>
+<button class="clickbtn" onclick="clickMoney()">CLICK</button>
+</div>
+
+<div class="card">
+<div class="progress"><div id="fill" class="fill"></div></div>
+<p>Splaceno: <span id="paid">0</span> / 10 000 000 Kč</p>
+
+<p><b>🌍 Odemčení 2. světa</b> (100 000 Kč)</p>
+<div class="progress" id="world2Progress" onclick="enterWorld2()" style="cursor:pointer"><div id="world2Fill" class="fill"></div></div>
+<p><span id="world2Text">0 / 100 000 Kč</span></p>
+</div><br>
+
+<div class="grid">
+
+<div class="card">
+<h3 id='upgradeTitle'>📚 Upgrades (Svět 1)</h3>
+<button class="shopbtn" id="sesitBtn" onclick="buy('sesit')"></button>
+<button class="shopbtn" id="tuzkaBtn" onclick="buy('tuzka')"></button>
+<button class="shopbtn" id="ucebniceBtn" onclick="buy('ucebnice')"></button>
+<button class="shopbtn" id="pracovniBtn" onclick="buy('pracovni')"></button>
+<button class="shopbtn" id="kamaradBtn" onclick="buy('kamarad')"></button>
+<button class="shopbtn" id="laviceBtn" onclick="buy('lavice')"></button>
+</div>
+
+<div class="card">
+<h3>💎 Gem Shop</h3>
+<button class="shopbtn" onclick="timeSkip(180,5)">3 min skip - 5💎</button>
+<button class="shopbtn" onclick="timeSkip(300,7)">5 min skip - 7💎</button>
+<button class="shopbtn" onclick="timeSkip(600,12)">10 min skip - 12💎</button>
+<button class="shopbtn" onclick="timeSkip(1800,20)">30 min skip - 20💎</button>
+<hr>
+<button class="shopbtn" onclick="boostCash(2,180,10)">2x Cash 3 min - 10💎</button>
+<button class="shopbtn" onclick="boostCash(3,120,15)">3x Cash 2 min - 15💎</button>
+</div>
+
+<div class="card">
+<h3>📊 Statistiky</h3>
+<p>Kč/s: <span id="perSec">0</span></p>
+<p>Click Power: <span id="clickPower">1</span></p>
+</div>
+</div>
+</div>
+
+<script>
+let money=0,gems=0,perSecond=0,clickPower=1,boost=1;
+const costs={sesit:25,tuzka:50,ucebnice:150,pracovni:300,kamarad:500,lavice:800};
+
+const moneyEl=document.getElementById("money");
+const gemsEl=document.getElementById("gems");
+const paid=document.getElementById("paid");
+const fill=document.getElementById("fill");
+
+function update(){
+moneyEl.innerText=Math.floor(money)+" Kč";
+gemsEl.innerText=gems;
+paid.innerText=Math.floor(money);
+fill.style.width=Math.min(money/10000000*100,100)+"%";
+document.getElementById('perSec').innerText=Math.floor(perSecond*boost);
+document.getElementById('clickPower').innerText=clickPower;
+document.getElementById('world2Fill').style.width=Math.min(money/100000*100,100)+'%';
+document.getElementById('world2Text').innerText=Math.floor(Math.min(money,100000))+' / 100 000 Kč';
+}
+
+function refreshButtons(){
+sesitBtn.innerText='Sešit +1/s ('+costs.sesit+' Kč)';
+tuzkaBtn.innerText='Tužka +1/c ('+costs.tuzka+' Kč)';
+ucebniceBtn.innerText='Učebnice +3/s ('+costs.ucebnice+' Kč)';
+pracovniBtn.innerText='Pr. sešit +5/s ('+costs.pracovni+' Kč)';
+kamaradBtn.innerText='Kamarád při testu +5/c -10/s ('+costs.kamarad+' Kč)';
+laviceBtn.innerText='Lavice +10/s ('+costs.lavice+' Kč)';
+}
+
+function showMessage(text){
+const msg=document.getElementById('eventMsg');
+msg.textContent=text;
+msg.style.display='block';
+clearTimeout(window.msgTimer);
+window.msgTimer=setTimeout(()=>{msg.style.display='none';},5000);
+}
+
+function buy(x){
+if(money<costs[x]) return;
+money-=costs[x];
+
+if(x=='sesit') perSecond+=1;
+if(x=='tuzka') clickPower+=1;
+if(x=='ucebnice') perSecond+=3;
+if(x=='pracovni') perSecond+=5;
+if(x=='kamarad'){clickPower+=5; perSecond=Math.max(0,perSecond-10);}
+if(x=='lavice') perSecond+=10;
+
+costs[x]=Math.floor(costs[x]*1.25);
+
+let world=1;
+const world2Costs={tahak:2000,wifi:3500,parta:8000,discord:12000,ucitel:25000,oblibenec:40000,guru:100000};
+
+function enterWorld2(){
+ if(money<100000)return;
+ world=2;
+ document.getElementById('worldTitle').innerText='🎓 Škola (2. svět)';
+ document.getElementById('upgradeTitle').innerText='📚 Upgrades (Svět 2)';
+
+ sesitBtn.onclick=()=>buy2('tahak');
+ tuzkaBtn.onclick=()=>buy2('wifi');
+ ucebniceBtn.onclick=()=>buy2('parta');
+ pracovniBtn.onclick=()=>buy2('discord');
+ kamaradBtn.onclick=()=>buy2('ucitel');
+ laviceBtn.onclick=()=>buy2('oblibenec');
+
+ laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='guruBtn' onclick=\"buy2('guru')\"></button>");
+ refreshButtons2();
+ showMessage('🌍 Vítej ve 2. světě!');
+}
+
+function refreshButtons2(){
+ sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč)';
+ tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč)';
+ ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč)';
+ pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč)';
+ kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč)';
+ laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč)';
+ if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč)';
+}
+
+function buy2(x){
+ if(money<world2Costs[x]) return;
+ money-=world2Costs[x];
+
+ if(x=='tahak') clickPower+=15;
+ if(x=='wifi') perSecond+=25;
+ if(x=='parta') perSecond+=50;
+ if(x=='discord') perSecond+=75;
+ if(x=='ucitel') perSecond+=150;
+ if(x=='oblibenec') clickPower+=30;
+ if(x=='guru') perSecond+=500;
+
+ world2Costs[x]=Math.floor(world2Costs[x]*1.25);
+ refreshButtons2();
+ update();
+}
+
+refreshButtons();
+update();
+}
+
+function clickMoney(){
+money += clickPower*boost;
+
+if(Math.floor(Math.random()*1000)==0){
+gems++;
+showMessage("💎 Našel jsi gem!");
+}
+
+if(Math.floor(Math.random()*100)==0){
+if(Math.random()<0.5){
+money*=0.9;
+showMessage("Učitelka dala neoznámený test a stálo tě to -10 % peněz.");
+}else{
+money*=1.10;
+showMessage("Ředitel je nemocný a dal vám +10 % vašich peněz.");
+}
+}
+update();
+}
+
+function timeSkip(seconds,cost){
+if(gems<cost){alert("Nemáš dost gemů!");return;}
+gems-=cost;
+money+=perSecond*boost*seconds;
+update();
+}
+
+function boostCash(mult,duration,cost){
+if(gems<cost){alert("Nemáš dost gemů!");return;}
+gems-=cost;
+boost*=mult;
+update();
+setTimeout(()=>{boost/=mult;update();},duration*1000);
+}
+
+setInterval(()=>{
+money+=perSecond*boost;
+update();
+},1000);
+
+
+let world=1;
+const world2Costs={tahak:2000,wifi:3500,parta:8000,discord:12000,ucitel:25000,oblibenec:40000,guru:100000};
+
+function enterWorld2(){
+ if(money<100000)return;
+ money-=100000;
+ world=2;
+ update();
+ document.getElementById('worldTitle').innerText='🎓 Škola (2. svět)';
+ document.getElementById('upgradeTitle').innerText='📚 Upgrades (Svět 2)';
+
+ sesitBtn.onclick=()=>buy2('tahak');
+ tuzkaBtn.onclick=()=>buy2('wifi');
+ ucebniceBtn.onclick=()=>buy2('parta');
+ pracovniBtn.onclick=()=>buy2('discord');
+ kamaradBtn.onclick=()=>buy2('ucitel');
+ laviceBtn.onclick=()=>buy2('oblibenec');
+
+ laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='guruBtn' onclick=\"buy2('guru')\"></button>");
+ refreshButtons2();
+ showMessage('🌍 Vítej ve 2. světě!');
+}
+
+function refreshButtons2(){
+ sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč)';
+ tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč)';
+ ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč)';
+ pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč)';
+ kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč)';
+ laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč)';
+ if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč)';
+}
+
+function buy2(x){
+ if(money<world2Costs[x]) return;
+ money-=world2Costs[x];
+
+ if(x=='tahak') clickPower+=15;
+ if(x=='wifi') perSecond+=25;
+ if(x=='parta') perSecond+=50;
+ if(x=='discord') perSecond+=75;
+ if(x=='ucitel') perSecond+=150;
+ if(x=='oblibenec') clickPower+=30;
+ if(x=='guru') perSecond+=500;
+
+ world2Costs[x]=Math.floor(world2Costs[x]*1.25);
+ refreshButtons2();
+ update();
+}
+
+refreshButtons();
+update();
+</script>
+</body>
+</html>
