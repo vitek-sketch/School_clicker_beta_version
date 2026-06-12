@@ -76,6 +76,25 @@ body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#8ec5
 
 <script>
 let money=0,gems=0,perSecond=0,clickPower=1,boost=1;
+ money =
+    Number(localStorage.getItem("money")) || 0;
+
+gems =
+    Number(localStorage.getItem("gems")) || 0;
+
+perSecond =
+    Number(localStorage.getItem("perSecond")) || 0;
+
+clickPower =
+    Number(localStorage.getItem("clickPower")) || 1;
+
+function saveGame(){
+
+    localStorage.setItem("money", money);
+    localStorage.setItem("gems", gems);
+    localStorage.setItem("perSecond", perSecond);
+    localStorage.setItem("clickPower", clickPower);
+}
 const costs={sesit:25,tuzka:50,ucebnice:150,pracovni:300,kamarad:500,lavice:800};
 
 const moneyEl=document.getElementById("money");
@@ -92,6 +111,7 @@ document.getElementById('perSec').innerText=Math.floor(perSecond*boost);
 document.getElementById('clickPower').innerText=clickPower;
 document.getElementById('world2Fill').style.width=Math.min(money/100000*100,100)+'%';
 document.getElementById('world2Text').innerText=Math.floor(Math.min(money,100000))+' / 100 000 Kč';
+ saveGame();
 }
 
 function refreshButtons(){
