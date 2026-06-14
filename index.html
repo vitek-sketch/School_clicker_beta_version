@@ -130,13 +130,27 @@ const paid=document.getElementById("paid");
 const fill=document.getElementById("fill");
 
 function update(){
-moneyEl.innerText=Math.floor(money)+" Kč";
-gemsEl.innerText=gems;
-paid.innerText=Math.floor(money);
-fill.style.width=Math.min(money/10000000*100,100)+"%";
-document.getElementById('perSec').innerText=Math.floor(perSecond*boost);
-document.getElementById('clickPower').innerText=clickPower;
-document.getElementById('world2Fill').style.width=Math.min(money/100000*100,100)+'%';
+moneyEl.innerText =
+    Math.floor(money).toLocaleString("cs-CZ") + " Kč";
+
+gemsEl.innerText =
+    gems.toLocaleString("cs-CZ");
+
+paid.innerText =
+    Math.floor(money).toLocaleString("cs-CZ");
+
+fill.style.width =
+    Math.min(money/10000000*100,100) + "%";
+
+document.getElementById('perSec').innerText =
+    Math.floor(perSecond*boost).toLocaleString("cs-CZ");
+
+document.getElementById('clickPower').innerText =
+    clickPower.toLocaleString("cs-CZ");
+document.getElementById('world2Text').innerText =
+Math.floor(Math.min(money,100000))
+.toLocaleString("cs-CZ")
++ ' / 100 000 Kč';
 document.getElementById('world2Text').innerText=Math.floor(Math.min(money,100000))+' / 100 000 Kč';
 if(document.getElementById('world3Fill')){document.getElementById('world3Fill').style.width=Math.min(money/10000000*100,100)+'%';document.getElementById('world3Text').innerText=Math.floor(Math.min(money,10000000))+' / 10 000 000 Kč';}
  saveGame();
@@ -398,10 +412,6 @@ function buy3(x){
  refreshButtons3();
  update();
 }
-
-
-
-
 
 function buyDev(){
  clickPower += 1000000;
