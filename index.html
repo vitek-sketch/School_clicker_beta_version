@@ -41,6 +41,11 @@ body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#8ec5
 <p><b>🌍 Odemčení 2. světa</b> (100 000 Kč)</p>
 <div class="progress" id="world2Progress" onclick="enterWorld2()" style="cursor:pointer"><div id="world2Fill" class="fill"></div></div>
 <p><span id="world2Text">0 / 100 000 Kč</span></p>
+
+<div id="world3Unlock" style="display:none"><p><b>🌍 Odemčení 3. světa</b> (10 000 000 Kč)</p>
+<div class="progress" id="world3Progress" onclick="enterWorld3()" style="cursor:pointer"><div id="world3Fill" class="fill"></div></div>
+<p><span id="world3Text">0 / 10 000 000 Kč</span></p></div>
+
 </div><br>
 
 <div class="grid">
@@ -53,6 +58,7 @@ body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#8ec5
 <button class="shopbtn" id="pracovniBtn" onclick="buy('pracovni')"></button>
 <button class="shopbtn" id="kamaradBtn" onclick="buy('kamarad')"></button>
 <button class="shopbtn" id="laviceBtn" onclick="buy('lavice')"></button>
+<button class="shopbtn" onclick="buyDev()">🧪 DEV MODE +1 000 000/c +1 000 000/s</button>
 </div>
 
 <div class="card">
@@ -94,8 +100,29 @@ function saveGame(){
     localStorage.setItem("gems", gems);
     localStorage.setItem("perSecond", perSecond);
     localStorage.setItem("clickPower", clickPower);
+    localStorage.setItem("worldUnlocked", worldUnlocked);
+    localStorage.setItem("owned", JSON.stringify(owned));
+
+    localStorage.setItem("savedCosts", JSON.stringify({
+        costs,
+        world2Costs,
+        world3Costs
+    }));
+    localStorage.setItem("world", world);
 }
 const costs={sesit:25,tuzka:50,ucebnice:150,pracovni:300,kamarad:500,lavice:800};
+
+const owned={
+ sesit:0,tuzka:0,ucebnice:0,pracovni:0,kamarad:0,lavice:0,
+ tahak:0,wifi:0,parta:0,discord:0,ucitel:0,oblibenec:0,guru:0,
+ student:0,coffee:0,scripts:0,energy:0,notebook:0,senior:0,professor:0
+};
+
+let worldUnlocked = Number(localStorage.getItem("worldUnlocked")) || 1;
+
+const savedOwned = JSON.parse(localStorage.getItem("owned") || "{}");
+Object.assign(owned, savedOwned);
+
 
 const moneyEl=document.getElementById("money");
 const gemsEl=document.getElementById("gems");
@@ -111,6 +138,7 @@ document.getElementById('perSec').innerText=Math.floor(perSecond*boost);
 document.getElementById('clickPower').innerText=clickPower;
 document.getElementById('world2Fill').style.width=Math.min(money/100000*100,100)+'%';
 document.getElementById('world2Text').innerText=Math.floor(Math.min(money,100000))+' / 100 000 Kč';
+if(document.getElementById('world3Fill')){document.getElementById('world3Fill').style.width=Math.min(money/10000000*100,100)+'%';document.getElementById('world3Text').innerText=Math.floor(Math.min(money,10000000))+' / 10 000 000 Kč';}
  saveGame();
 }
 
@@ -144,12 +172,13 @@ if(x=='lavice') perSecond+=10;
 
 costs[x]=Math.floor(costs[x]*1.25);
 
-let world=1;
+let world = Number(localStorage.getItem("world")) || 1;
 const world2Costs={tahak:2000,wifi:3500,parta:8000,discord:12000,ucitel:25000,oblibenec:40000,guru:100000};
 
 function enterWorld2(){
  if(money<100000)return;
  world=2;
+ worldUnlocked=2;
  document.getElementById('worldTitle').innerText='🎓 Škola (2. svět)';
  document.getElementById('upgradeTitle').innerText='📚 Upgrades (Svět 2)';
 
@@ -162,17 +191,20 @@ function enterWorld2(){
 
  laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='guruBtn' onclick=\"buy2('guru')\"></button>");
  refreshButtons2();
+ document.getElementById('world2Progress').style.display='none';
+ document.getElementById('world2Text').parentElement.style.display='none';
+ document.getElementById('world3Unlock').style.display='block';
  showMessage('🌍 Vítej ve 2. světě!');
 }
 
 function refreshButtons2(){
- sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč)';
- tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč)';
- ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč)';
- pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč)';
- kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč)';
- laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč)';
- if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč)';
+ sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč) ('+owned.tahak+')';
+ tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč) ('+owned.wifi+')';
+ ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč) ('+owned.parta+')';
+ pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč) ('+owned.discord+')';
+ kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč) ('+owned.ucitel+')';
+ laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč) ('+owned.oblibenec+')';
+ if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč) ('+owned.guru+')';
 }
 
 function buy2(x){
@@ -187,17 +219,20 @@ function buy2(x){
  if(x=='oblibenec') clickPower+=30;
  if(x=='guru') perSecond+=500;
 
+ owned[x]++;
+
  world2Costs[x]=Math.floor(world2Costs[x]*1.25);
  refreshButtons2();
  update();
 }
 
-refreshButtons();
-update();
+
 }
 
 function clickMoney(){
 money += clickPower*boost;
+
+if(Math.floor(Math.random()*10000)==0){ partyEvent(); }
 
 if(Math.floor(Math.random()*1000)==0){
 gems++;
@@ -241,9 +276,17 @@ let world=1;
 const world2Costs={tahak:2000,wifi:3500,parta:8000,discord:12000,ucitel:25000,oblibenec:40000,guru:100000};
 
 function enterWorld2(){
- if(money<100000)return;
- money-=100000;
+ if(world===2 || world===3) return;
+ if(money<100000 && worldUnlocked < 2)return;
+
+ if(worldUnlocked < 2){
+   money-=100000;
+ }
  world=2;
+
+ document.getElementById('world2Fill').style.width='100%';
+ document.getElementById('world2Text').innerText='100 000 / 100 000 Kč';
+
  update();
  document.getElementById('worldTitle').innerText='🎓 Škola (2. svět)';
  document.getElementById('upgradeTitle').innerText='📚 Upgrades (Svět 2)';
@@ -257,17 +300,20 @@ function enterWorld2(){
 
  laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='guruBtn' onclick=\"buy2('guru')\"></button>");
  refreshButtons2();
+ document.getElementById('world2Progress').style.display='none';
+ document.getElementById('world2Text').parentElement.style.display='none';
+ document.getElementById('world3Unlock').style.display='block';
  showMessage('🌍 Vítej ve 2. světě!');
 }
 
 function refreshButtons2(){
- sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč)';
- tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč)';
- ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč)';
- pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč)';
- kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč)';
- laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč)';
- if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč)';
+ sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč) ('+owned.tahak+')';
+ tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč) ('+owned.wifi+')';
+ ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč) ('+owned.parta+')';
+ pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč) ('+owned.discord+')';
+ kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč) ('+owned.ucitel+')';
+ laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč) ('+owned.oblibenec+')';
+ if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč) ('+owned.guru+')';
 }
 
 function buy2(x){
@@ -282,38 +328,124 @@ function buy2(x){
  if(x=='oblibenec') clickPower+=30;
  if(x=='guru') perSecond+=500;
 
+ owned[x]++;
+
  world2Costs[x]=Math.floor(world2Costs[x]*1.25);
  refreshButtons2();
  update();
 }
 
-refreshButtons();
-update();
-</script>
+
+const world3Costs={student:50000,coffee:75000,scripts:500000,energy:1500000,notebook:5000000,senior:25000000,professor:50000000};
+
+const savedCosts = JSON.parse(localStorage.getItem("savedCosts") || "{}");
+
+Object.assign(costs, savedCosts.costs || {});
+Object.assign(world2Costs, savedCosts.world2Costs || {});
+Object.assign(world3Costs, savedCosts.world3Costs || {});
 
 
-<!-- PATCH v1 -->
-<script>
-const savedCosts = JSON.parse(localStorage.getItem("costs") || "{}");
-Object.assign(costs, savedCosts);
+function enterWorld3(){
+ if(money<10000000 && worldUnlocked < 3) return;
 
-const savedWorld2Costs = JSON.parse(localStorage.getItem("world2Costs") || "{}");
-Object.assign(world2Costs, savedWorld2Costs);
+ if(worldUnlocked < 3){
+   money-=10000000;
+ }
+ worldUnlocked=3;
+ document.getElementById('worldTitle').innerText='🏙️ Univerzita (3. svět)';
+ document.getElementById('upgradeTitle').innerText='🚀 Upgrades (Svět 3)';
 
-const oldSaveGame = saveGame;
-saveGame = function(){
-    oldSaveGame();
-    localStorage.setItem("world", world);
-    localStorage.setItem("costs", JSON.stringify(costs));
-    localStorage.setItem("world2Costs", JSON.stringify(world2Costs));
-};
+ sesitBtn.onclick=()=>buy3('student');
+ tuzkaBtn.onclick=()=>buy3('coffee');
+ ucebniceBtn.onclick=()=>buy3('scripts');
+ pracovniBtn.onclick=()=>buy3('energy');
+ kamaradBtn.onclick=()=>buy3('notebook');
+ laviceBtn.onclick=()=>buy3('senior');
 
-window.addEventListener("load",()=>{
-    world = Number(localStorage.getItem("world")) || 1;
-    if(world >= 2){
-        enterWorld2();
-    }
+ if(!document.getElementById('profBtn')){
+   laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='profBtn' onclick=\"buy3('professor')\"></button>");
+ }
+ refreshButtons3();
+ update();
+ showMessage('🌍 Vítej ve 3. světě!');
+}
+
+function refreshButtons3(){
+ sesitBtn.innerText='👨‍🎓 Student +250 Kč/s ('+world3Costs.student+' Kč)';
+ tuzkaBtn.innerText='☕ Coffee +100 Kč/c ('+world3Costs.coffee+' Kč)';
+ ucebniceBtn.innerText='📚 Scripts +750 Kč/s ('+world3Costs.scripts+' Kč)';
+ pracovniBtn.innerText='🥤 Energy Drink +300 Kč/c ('+world3Costs.energy+' Kč)';
+ kamaradBtn.innerText='💻 Notebook +2 500 Kč/s ('+world3Costs.notebook+' Kč)';
+ laviceBtn.innerText='🤝 Senior Friend +1 000 Kč/c ('+world3Costs.senior+' Kč)';
+ if(document.getElementById('profBtn')) profBtn.innerText='👨‍🏫 Professor +10 000 Kč/s ('+world3Costs.professor+' Kč)';
+}
+
+function buy3(x){
+ if(money<world3Costs[x]) return;
+ money-=world3Costs[x];
+
+ if(x=='student') perSecond+=250;
+ if(x=='coffee') clickPower+=100;
+ if(x=='scripts') perSecond+=750;
+ if(x=='energy') clickPower+=300;
+ if(x=='notebook') perSecond+=2500;
+ if(x=='senior') clickPower+=1000;
+ if(x=='professor') perSecond+=10000;
+
+ owned[x]++;
+
+ world3Costs[x]=Math.floor(world3Costs[x]*1.25);
+ refreshButtons3();
+ update();
+}
+
+
+
+
+
+function buyDev(){
+ clickPower += 1000000;
+ perSecond += 1000000;
+ update();
+ showMessage('🧪 DEV MODE aktivován!');
+}
+
+// Studentská párty 1/10 000
+function partyEvent(){
+ let r = Math.random();
+
+ if(r < 0.50){
+   gems += 3;
+   showMessage('🎉 Studentská párty! +3 💎');
+ }
+ else if(r < 0.80){
+   gems += 5;
+   showMessage('🎉 Studentská párty! +5 💎');
+ }
+ else{
+   gems += 12;
+   showMessage('🎉 LEGENDÁRNÍ párty! +12 💎');
+ }
+ update();
+}
+
+window.addEventListener('load',()=>{
+
+ if(worldUnlocked >= 2){
+   enterWorld2();
+ }
+
+ if(worldUnlocked >= 3){
+   enterWorld3();
+ }
+
+ refreshButtons();
+ if(typeof refreshButtons2==='function') refreshButtons2();
+ if(typeof refreshButtons3==='function') refreshButtons3();
+
+ update();
 });
+
 </script>
 </body>
 </html>
