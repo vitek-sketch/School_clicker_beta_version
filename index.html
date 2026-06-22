@@ -2,460 +2,708 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<title>School Clicker Deluxe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Clicker 2.0 Clean Edition</title>
 <style>
-body{margin:0;font-family:Segoe UI,Arial;background:linear-gradient(135deg,#8ec5fc,#e0c3fc);}
-.container{max-width:1050px;margin:auto;padding:15px;}
-.card{background:rgba(255,255,255,.92);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.15);}
-.top{display:flex;justify-content:space-between;gap:10px}
-.panel{font-size:20px;font-weight:bold}
-.hero{text-align:center;margin:15px 0}
-.clickbtn{width:140px;height:140px;border:none;border-radius:50%;font-size:28px;font-weight:bold;color:white;cursor:pointer;background:linear-gradient(135deg,#43a047,#2e7d32);}
-.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px}
-.shopbtn{width:100%;padding:10px;margin:4px 0;border:none;border-radius:10px;cursor:pointer}
-.progress{height:20px;background:#ddd;border-radius:20px;overflow:hidden}
-.fill{height:100%;background:#4caf50;width:0%}
+:root{
+  --bg1:#8ec5fc;
+  --bg2:#e0c3fc;
+  --card:rgba(255,255,255,0.92);
+  --shadow:0 6px 18px rgba(0,0,0,0.15);
+  --green:#43a047;
+  --green2:#2e7d32;
+  --text:#1f2937;
+  --muted:#5b6472;
+  --line:#e5e7eb;
+  --accent:#4caf50;
+  --warn:#ffb703;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+
+.container{max-width:1080px;margin:auto;padding:12px}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:var(--shadow);
+  margin-bottom:10px;
+}
+.top{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.panel{
+  font-size:18px;
+  font-weight:700;
+}
+.hero{
+  text-align:center;
+  margin:10px 0 6px;
+}
+.clickbtn{
+  width:150px;
+  height:150px;
+  border:none;
+  border-radius:50%;
+  font-size:28px;
+  font-weight:800;
+  color:white;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  box-shadow:0 10px 20px rgba(46,125,50,0.25);
+}
+.clickbtn:active{transform:scale(0.97)}
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.shopbtn, .worldbtn, .smallbtn, .gembtn, .devbtn, .unlockbtn{
+  width:100%;
+  padding:11px 12px;
+  margin:4px 0;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  background:#f3f4f6;
+}
+.shopbtn:hover,.worldbtn:hover,.smallbtn:hover,.gembtn:hover,.devbtn:hover,.unlockbtn:hover{
+  filter:brightness(0.98);
+}
+.shopbtn:disabled,.worldbtn:disabled,.smallbtn:disabled,.gembtn:disabled,.devbtn:disabled,.unlockbtn:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+}
+.progress{
+  height:20px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  background:var(--accent);
+  width:0%;
+  transition:width 0.2s ease;
+}
+.progress-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.progress-label{
+  flex:1 1 220px;
+  min-width:200px;
+}
+.muted{color:var(--muted)}
+.section-title{
+  margin:0 0 10px;
+}
+.badge{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#eef2ff;
+  font-size:12px;
+  margin-left:6px;
+}
+#eventMsg{
+  min-height:48px;
+  display:none;
+  text-align:center;
+  font-weight:700;
+}
+#ending1, #ending2{
+  display:none;
+  border-left:6px solid var(--accent);
+}
+#boostList{
+  display:grid;
+  gap:8px;
+}
+.boost-item{
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+}
+.world-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.world-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  background:#fafafa;
+}
+.world-card.active{
+  border-color:#60a5fa;
+  background:#eff6ff;
+}
+.world-card.locked{
+  opacity:0.75;
+}
+.world-card h4{
+  margin:0 0 6px;
+}
+.world-card p{
+  margin:4px 0;
+}
+
+@media (min-width:720px){
+  .grid{grid-template-columns:1.2fr 0.9fr 0.7fr}
+  .world-grid{grid-template-columns:repeat(3,1fr)}
+  .clickbtn{width:160px;height:160px;font-size:30px}
+}
 </style>
 </head>
 <body>
 <div class="container">
 
-<div class="card">📖 Při jednom z tvých pranků jsi omylem zapálil školu a proto musíš zaplatit škole škodu 10 000 000 Kč.</div><br>
+  <div class="card">
+    <div class="muted">📖 Při jednom z tvých pranků jsi omylem zapálil školu a musíš zaplatit škodu.</div>
+  </div>
 
-<div class="top">
-<div class="card panel">💎 <span id="gems">0</span></div>
-<div class="card panel">💰 <span id="money">0 Kč</span></div>
-</div>
+  <div class="top">
+    <div class="card panel">💰 <span id="money">0</span></div>
+    <div class="card panel">💎 <span id="gems">0</span></div>
+  </div>
 
-<div id="eventMsg" class="card" style="display:none;text-align:center;font-weight:bold;margin-top:10px;"></div>
+  <div id="eventMsg" class="card"></div>
 
-<div class="hero">
-<h2 id='worldTitle'>🏫 Škola (1. svět)</h2>
-<button class="clickbtn" onclick="clickMoney()">CLICK</button>
-</div>
+  <div class="card hero">
+    <h2 id="worldTitle">🏫 Škola (1. svět)</h2>
+    <button class="clickbtn" onclick="clickMoney()">CLICK</button>
+    <div class="muted" style="margin-top:8px">Klikem vyděláváš podle click power.</div>
+  </div>
 
-<div class="card">
-<div class="progress"><div id="fill" class="fill"></div></div>
-<p>Splaceno: <span id="paid">0</span> / 10 000 000 Kč</p>
+  <div class="card">
+    <div class="progress-row">
+      <div class="progress-label">
+        <div class="muted" id="goalLabel">Cíl: 10 000 000 Kč</div>
+        <div class="progress" style="margin-top:8px">
+          <div id="fill" class="fill"></div>
+        </div>
+      </div>
+      <div style="min-width:180px;text-align:right">
+        <div class="muted">Splaceno</div>
+        <div style="font-weight:800" id="paid">0</div>
+      </div>
+    </div>
+  </div>
 
-<p><b>🌍 Odemčení 2. světa</b> (100 000 Kč)</p>
-<div class="progress" id="world2Progress" onclick="enterWorld2()" style="cursor:pointer"><div id="world2Fill" class="fill"></div></div>
-<p><span id="world2Text">0 / 100 000 Kč</span></p>
+  <div class="card">
+    <h3 class="section-title">🌍 Světy</h3>
+    <div class="world-grid" id="worldControls"></div>
+    <div class="muted" style="margin-top:8px">Všechny upgrady a ceny jsou uložené pro každý svět zvlášť.</div>
+  </div>
 
-<div id="world3Unlock" style="display:none"><p><b>🌍 Odemčení 3. světa</b> (10 000 000 Kč)</p>
-<div class="progress" id="world3Progress" onclick="enterWorld3()" style="cursor:pointer"><div id="world3Fill" class="fill"></div></div>
-<p><span id="world3Text">0 / 10 000 000 Kč</span></p></div>
+  <div class="grid">
+    <div class="card">
+      <h3 class="section-title" id="upgradeTitle">📚 Upgrades (Svět 1)</h3>
+      <div id="shop"></div>
+    </div>
 
-</div><br>
+    <div class="card">
+      <h3 class="section-title">💎 Gem Shop</h3>
+      <div id="gemShop"></div>
+    </div>
 
-<div class="grid">
+    <div class="card">
+      <h3 class="section-title">📊 Statistiky</h3>
+      <p>Kč/s: <span id="perSec">0</span></p>
+      <p>Click Power: <span id="clickPower">1</span></p>
+      <p>Boost: <span id="boostText">x1</span></p>
+      <button class="devbtn" onclick="buyDev()">🧪 DEV MODE +1 000 000/c +1 000 000/s</button>
+    </div>
+  </div>
 
-<div class="card">
-<h3 id='upgradeTitle'>📚 Upgrades (Svět 1)</h3>
-<button class="shopbtn" id="sesitBtn" onclick="buy('sesit')"></button>
-<button class="shopbtn" id="tuzkaBtn" onclick="buy('tuzka')"></button>
-<button class="shopbtn" id="ucebniceBtn" onclick="buy('ucebnice')"></button>
-<button class="shopbtn" id="pracovniBtn" onclick="buy('pracovni')"></button>
-<button class="shopbtn" id="kamaradBtn" onclick="buy('kamarad')"></button>
-<button class="shopbtn" id="laviceBtn" onclick="buy('lavice')"></button>
-<button class="shopbtn" onclick="buyDev()">🧪 DEV MODE +1 000 000/c +1 000 000/s</button>
-</div>
+  <div class="card" id="ending1">
+    <h3>🏆 Ending 1 – Splacený dluh</h3>
+    <p>Zaplatil jsi škole všechny škody způsobené pranky. Ředitel ti konečně odpustil.</p>
+    <p class="muted">Nový cíl: 10 000 000 000 Kč</p>
+  </div>
 
-<div class="card">
-<h3>💎 Gem Shop</h3>
-<button class="shopbtn" onclick="timeSkip(180,5)">3 min skip - 5💎</button>
-<button class="shopbtn" onclick="timeSkip(300,7)">5 min skip - 7💎</button>
-<button class="shopbtn" onclick="timeSkip(600,12)">10 min skip - 12💎</button>
-<button class="shopbtn" onclick="timeSkip(1800,20)">30 min skip - 20💎</button>
-<hr>
-<button class="shopbtn" onclick="boostCash(2,180,10)">2x Cash 3 min - 10💎</button>
-<button class="shopbtn" onclick="boostCash(3,120,15)">3x Cash 2 min - 15💎</button>
-</div>
+  <div class="card" id="ending2">
+    <h3>🌙 Ending 2 – Měsíční vila</h3>
+    <p>Dluh je dávno splacený. Rozhodl ses našetřit na luxusní měsíční vilu do důchodu.</p>
+    <p>🏡🌙 Gratulujeme! Koupil sis vlastní měsíční vilu a můžeš odejít do důchodu jako nejbohatší student všech dob.</p>
+  </div>
 
-<div class="card">
-<h3>📊 Statistiky</h3>
-<p>Kč/s: <span id="perSec">0</span></p>
-<p>Click Power: <span id="clickPower">1</span></p>
-</div>
-</div>
 </div>
 
 <script>
-let money=0,gems=0,perSecond=0,clickPower=1,boost=1;
- money =
-    Number(localStorage.getItem("money")) || 0;
-
-gems =
-    Number(localStorage.getItem("gems")) || 0;
-
-perSecond =
-    Number(localStorage.getItem("perSecond")) || 0;
-
-clickPower =
-    Number(localStorage.getItem("clickPower")) || 1;
-
-function saveGame(){
-
-    localStorage.setItem("money", money);
-    localStorage.setItem("gems", gems);
-    localStorage.setItem("perSecond", perSecond);
-    localStorage.setItem("clickPower", clickPower);
-    localStorage.setItem("worldUnlocked", worldUnlocked);
-    localStorage.setItem("owned", JSON.stringify(owned));
-
-    localStorage.setItem("savedCosts", JSON.stringify({
-        costs,
-        world2Costs,
-        world3Costs
-    }));
-    localStorage.setItem("world", world);
-}
-const costs={sesit:25,tuzka:50,ucebnice:150,pracovni:300,kamarad:500,lavice:800};
-
-const owned={
- sesit:0,tuzka:0,ucebnice:0,pracovni:0,kamarad:0,lavice:0,
- tahak:0,wifi:0,parta:0,discord:0,ucitel:0,oblibenec:0,guru:0,
- student:0,coffee:0,scripts:0,energy:0,notebook:0,senior:0,professor:0
-};
-
-let worldUnlocked = Number(localStorage.getItem("worldUnlocked")) || 1;
-
-const savedOwned = JSON.parse(localStorage.getItem("owned") || "{}");
-Object.assign(owned, savedOwned);
-
-
-const moneyEl=document.getElementById("money");
-const gemsEl=document.getElementById("gems");
-const paid=document.getElementById("paid");
-const fill=document.getElementById("fill");
-
-function update(){
-moneyEl.innerText =
-    Math.floor(money).toLocaleString("cs-CZ") + " Kč";
-
-gemsEl.innerText =
-    gems.toLocaleString("cs-CZ");
-
-paid.innerText =
-    Math.floor(money).toLocaleString("cs-CZ");
-
-fill.style.width =
-    Math.min(money/10000000*100,100) + "%";
-
-document.getElementById('perSec').innerText =
-    Math.floor(perSecond*boost).toLocaleString("cs-CZ");
-
-document.getElementById('clickPower').innerText =
-    clickPower.toLocaleString("cs-CZ");
-document.getElementById('world2Text').innerText =
-Math.floor(Math.min(money,100000))
-.toLocaleString("cs-CZ")
-+ ' / 100 000 Kč';
-document.getElementById('world2Text').innerText=Math.floor(Math.min(money,100000))+' / 100 000 Kč';
-if(document.getElementById('world3Fill')){document.getElementById('world3Fill').style.width=Math.min(money/10000000*100,100)+'%';document.getElementById('world3Text').innerText=Math.floor(Math.min(money,10000000))+' / 10 000 000 Kč';}
- saveGame();
-}
-
-function refreshButtons(){
-sesitBtn.innerText='Sešit +1/s ('+costs.sesit+' Kč)';
-tuzkaBtn.innerText='Tužka +1/c ('+costs.tuzka+' Kč)';
-ucebniceBtn.innerText='Učebnice +3/s ('+costs.ucebnice+' Kč)';
-pracovniBtn.innerText='Pr. sešit +5/s ('+costs.pracovni+' Kč)';
-kamaradBtn.innerText='Kamarád při testu +5/c -10/s ('+costs.kamarad+' Kč)';
-laviceBtn.innerText='Lavice +10/s ('+costs.lavice+' Kč)';
-}
-
-function showMessage(text){
-const msg=document.getElementById('eventMsg');
-msg.textContent=text;
-msg.style.display='block';
-clearTimeout(window.msgTimer);
-window.msgTimer=setTimeout(()=>{msg.style.display='none';},5000);
-}
-
-function buy(x){
-if(money<costs[x]) return;
-money-=costs[x];
-
-if(x=='sesit') perSecond+=1;
-if(x=='tuzka') clickPower+=1;
-if(x=='ucebnice') perSecond+=3;
-if(x=='pracovni') perSecond+=5;
-if(x=='kamarad'){clickPower+=5; perSecond=Math.max(0,perSecond-10);}
-if(x=='lavice') perSecond+=10;
-
-costs[x]=Math.floor(costs[x]*1.25);
-
-let world = Number(localStorage.getItem("world")) || 1;
-const world2Costs={tahak:2000,wifi:3500,parta:8000,discord:12000,ucitel:25000,oblibenec:40000,guru:100000};
-
-function enterWorld2(){
- if(money<100000)return;
- world=2;
- worldUnlocked=2;
- document.getElementById('worldTitle').innerText='🎓 Škola (2. svět)';
- document.getElementById('upgradeTitle').innerText='📚 Upgrades (Svět 2)';
-
- sesitBtn.onclick=()=>buy2('tahak');
- tuzkaBtn.onclick=()=>buy2('wifi');
- ucebniceBtn.onclick=()=>buy2('parta');
- pracovniBtn.onclick=()=>buy2('discord');
- kamaradBtn.onclick=()=>buy2('ucitel');
- laviceBtn.onclick=()=>buy2('oblibenec');
-
- laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='guruBtn' onclick=\"buy2('guru')\"></button>");
- refreshButtons2();
- document.getElementById('world2Progress').style.display='none';
- document.getElementById('world2Text').parentElement.style.display='none';
- document.getElementById('world3Unlock').style.display='block';
- showMessage('🌍 Vítej ve 2. světě!');
-}
-
-function refreshButtons2(){
- sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč) ('+owned.tahak+')';
- tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč) ('+owned.wifi+')';
- ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč) ('+owned.parta+')';
- pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč) ('+owned.discord+')';
- kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč) ('+owned.ucitel+')';
- laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč) ('+owned.oblibenec+')';
- if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč) ('+owned.guru+')';
-}
-
-function buy2(x){
- if(money<world2Costs[x]) return;
- money-=world2Costs[x];
-
- if(x=='tahak') clickPower+=15;
- if(x=='wifi') perSecond+=25;
- if(x=='parta') perSecond+=50;
- if(x=='discord') perSecond+=75;
- if(x=='ucitel') perSecond+=150;
- if(x=='oblibenec') clickPower+=30;
- if(x=='guru') perSecond+=500;
-
- owned[x]++;
-
- world2Costs[x]=Math.floor(world2Costs[x]*1.25);
- refreshButtons2();
- update();
-}
-
-
-}
-
-function clickMoney(){
-money += clickPower*boost;
-
-if(Math.floor(Math.random()*10000)==0){ partyEvent(); }
-
-if(Math.floor(Math.random()*1000)==0){
-gems++;
-showMessage("💎 Našel jsi gem!");
-}
-
-if(Math.floor(Math.random()*100)==0){
-if(Math.random()<0.5){
-money*=0.9;
-showMessage("Učitelka dala neoznámený test a stálo tě to -10 % peněz.");
-}else{
-money*=1.10;
-showMessage("Ředitel je nemocný a dal vám +10 % vašich peněz.");
-}
-}
-update();
-}
-
-function timeSkip(seconds,cost){
-if(gems<cost){alert("Nemáš dost gemů!");return;}
-gems-=cost;
-money+=perSecond*boost*seconds;
-update();
-}
-
-function boostCash(mult,duration,cost){
-if(gems<cost){alert("Nemáš dost gemů!");return;}
-gems-=cost;
-boost*=mult;
-update();
-setTimeout(()=>{boost/=mult;update();},duration*1000);
-}
-
-setInterval(()=>{
-money+=perSecond*boost;
-update();
-},1000);
-
-
-let world=1;
-const world2Costs={tahak:2000,wifi:3500,parta:8000,discord:12000,ucitel:25000,oblibenec:40000,guru:100000};
-
-function enterWorld2(){
- if(world===2 || world===3) return;
- if(money<100000 && worldUnlocked < 2)return;
-
- if(worldUnlocked < 2){
-   money-=100000;
- }
- world=2;
-
- document.getElementById('world2Fill').style.width='100%';
- document.getElementById('world2Text').innerText='100 000 / 100 000 Kč';
-
- update();
- document.getElementById('worldTitle').innerText='🎓 Škola (2. svět)';
- document.getElementById('upgradeTitle').innerText='📚 Upgrades (Svět 2)';
-
- sesitBtn.onclick=()=>buy2('tahak');
- tuzkaBtn.onclick=()=>buy2('wifi');
- ucebniceBtn.onclick=()=>buy2('parta');
- pracovniBtn.onclick=()=>buy2('discord');
- kamaradBtn.onclick=()=>buy2('ucitel');
- laviceBtn.onclick=()=>buy2('oblibenec');
-
- laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='guruBtn' onclick=\"buy2('guru')\"></button>");
- refreshButtons2();
- document.getElementById('world2Progress').style.display='none';
- document.getElementById('world2Text').parentElement.style.display='none';
- document.getElementById('world3Unlock').style.display='block';
- showMessage('🌍 Vítej ve 2. světě!');
-}
-
-function refreshButtons2(){
- sesitBtn.innerText='Tahák 2.0 +15/c ('+world2Costs.tahak+' Kč) ('+owned.tahak+')';
- tuzkaBtn.innerText='Školní Wi‑Fi +25/s ('+world2Costs.wifi+' Kč) ('+owned.wifi+')';
- ucebniceBtn.innerText='Parta šprtů +50/s ('+world2Costs.parta+' Kč) ('+owned.parta+')';
- pracovniBtn.innerText='Třídní Discord +75/s ('+world2Costs.discord+' Kč) ('+owned.discord+')';
- kamaradBtn.innerText='Soukromý učitel +150/s ('+world2Costs.ucitel+' Kč) ('+owned.ucitel+')';
- laviceBtn.innerText='Ředitelův oblíbenec +30/c ('+world2Costs.oblibenec+' Kč) ('+owned.oblibenec+')';
- if(document.getElementById('guruBtn')) guruBtn.innerText='Maturitní guru +500/s ('+world2Costs.guru+' Kč) ('+owned.guru+')';
-}
-
-function buy2(x){
- if(money<world2Costs[x]) return;
- money-=world2Costs[x];
-
- if(x=='tahak') clickPower+=15;
- if(x=='wifi') perSecond+=25;
- if(x=='parta') perSecond+=50;
- if(x=='discord') perSecond+=75;
- if(x=='ucitel') perSecond+=150;
- if(x=='oblibenec') clickPower+=30;
- if(x=='guru') perSecond+=500;
-
- owned[x]++;
-
- world2Costs[x]=Math.floor(world2Costs[x]*1.25);
- refreshButtons2();
- update();
-}
-
-
-const world3Costs={student:50000,coffee:75000,scripts:500000,energy:1500000,notebook:5000000,senior:25000000,professor:50000000};
-
-const savedCosts = JSON.parse(localStorage.getItem("savedCosts") || "{}");
-
-Object.assign(costs, savedCosts.costs || {});
-Object.assign(world2Costs, savedCosts.world2Costs || {});
-Object.assign(world3Costs, savedCosts.world3Costs || {});
-
-
-function enterWorld3(){
- if(money<10000000 && worldUnlocked < 3) return;
-
- if(worldUnlocked < 3){
-   money-=10000000;
- }
- worldUnlocked=3;
- document.getElementById('worldTitle').innerText='🏙️ Univerzita (3. svět)';
- document.getElementById('upgradeTitle').innerText='🚀 Upgrades (Svět 3)';
-
- sesitBtn.onclick=()=>buy3('student');
- tuzkaBtn.onclick=()=>buy3('coffee');
- ucebniceBtn.onclick=()=>buy3('scripts');
- pracovniBtn.onclick=()=>buy3('energy');
- kamaradBtn.onclick=()=>buy3('notebook');
- laviceBtn.onclick=()=>buy3('senior');
-
- if(!document.getElementById('profBtn')){
-   laviceBtn.insertAdjacentHTML('afterend',"<button class='shopbtn' id='profBtn' onclick=\"buy3('professor')\"></button>");
- }
- refreshButtons3();
- update();
- showMessage('🌍 Vítej ve 3. světě!');
-}
-
-function refreshButtons3(){
- sesitBtn.innerText='👨‍🎓 Student +250 Kč/s ('+world3Costs.student+' Kč)';
- tuzkaBtn.innerText='☕ Coffee +100 Kč/c ('+world3Costs.coffee+' Kč)';
- ucebniceBtn.innerText='📚 Scripts +750 Kč/s ('+world3Costs.scripts+' Kč)';
- pracovniBtn.innerText='🥤 Energy Drink +300 Kč/c ('+world3Costs.energy+' Kč)';
- kamaradBtn.innerText='💻 Notebook +2 500 Kč/s ('+world3Costs.notebook+' Kč)';
- laviceBtn.innerText='🤝 Senior Friend +1 000 Kč/c ('+world3Costs.senior+' Kč)';
- if(document.getElementById('profBtn')) profBtn.innerText='👨‍🏫 Professor +10 000 Kč/s ('+world3Costs.professor+' Kč)';
-}
-
-function buy3(x){
- if(money<world3Costs[x]) return;
- money-=world3Costs[x];
-
- if(x=='student') perSecond+=250;
- if(x=='coffee') clickPower+=100;
- if(x=='scripts') perSecond+=750;
- if(x=='energy') clickPower+=300;
- if(x=='notebook') perSecond+=2500;
- if(x=='senior') clickPower+=1000;
- if(x=='professor') perSecond+=10000;
-
- owned[x]++;
-
- world3Costs[x]=Math.floor(world3Costs[x]*1.25);
- refreshButtons3();
- update();
-}
-
-function buyDev(){
- clickPower += 1000000;
- perSecond += 1000000;
- update();
- showMessage('🧪 DEV MODE aktivován!');
-}
-
-// Studentská párty 1/10 000
-function partyEvent(){
- let r = Math.random();
-
- if(r < 0.50){
-   gems += 3;
-   showMessage('🎉 Studentská párty! +3 💎');
- }
- else if(r < 0.80){
-   gems += 5;
-   showMessage('🎉 Studentská párty! +5 💎');
- }
- else{
-   gems += 12;
-   showMessage('🎉 LEGENDÁRNÍ párty! +12 💎');
- }
- update();
-}
-
-window.addEventListener('load',()=>{
-
- if(worldUnlocked >= 2){
-   enterWorld2();
- }
-
- if(worldUnlocked >= 3){
-   enterWorld3();
- }
-
- refreshButtons();
- if(typeof refreshButtons2==='function') refreshButtons2();
- if(typeof refreshButtons3==='function') refreshButtons3();
-
- update();
-});
-
+(() => {
+  const SAVE_KEY = "school_clicker_2_clean_v1";
+
+  const WORLD_DEFS = {
+    1: {
+      title: "🏫 Škola (1. svět)",
+      unlockCost: 0,
+      endingGoal: 10_000_000,
+      upgrades: [
+        { id: "sesit", label: "Sešit +1/s", baseCost: 25, effect: { perSecond: 1 } },
+        { id: "tuzka", label: "Tužka +1/c", baseCost: 50, effect: { clickPower: 1 } },
+        { id: "ucebnice", label: "Učebnice +3/s", baseCost: 150, effect: { perSecond: 3 } },
+        { id: "pracovni", label: "Pr. sešit +5/s", baseCost: 300, effect: { perSecond: 5 } },
+        { id: "kamarad", label: "Kamarád při testu +5/c -10/s", baseCost: 500, effect: { clickPower: 5, perSecondDelta: -10 } },
+        { id: "lavice", label: "Lavice +10/s", baseCost: 800, effect: { perSecond: 10 } }
+      ]
+    },
+    2: {
+      title: "🎓 Škola (2. svět)",
+      unlockCost: 100_000,
+      endingGoal: 10_000_000,
+      upgrades: [
+        { id: "tahak", label: "Tahák 2.0 +15/c", baseCost: 2_000, effect: { clickPower: 15 } },
+        { id: "wifi", label: "Školní Wi‑Fi +25/s", baseCost: 3_500, effect: { perSecond: 25 } },
+        { id: "parta", label: "Parta šprtů +50/s", baseCost: 8_000, effect: { perSecond: 50 } },
+        { id: "discord", label: "Třídní Discord +75/s", baseCost: 12_000, effect: { perSecond: 75 } },
+        { id: "ucitel", label: "Soukromý učitel +150/s", baseCost: 25_000, effect: { perSecond: 150 } },
+        { id: "oblibenec", label: "Ředitelův oblíbenec +30/c", baseCost: 40_000, effect: { clickPower: 30 } },
+        { id: "guru", label: "Maturitní guru +500/s", baseCost: 100_000, effect: { perSecond: 500 } }
+      ]
+    },
+    3: {
+      title: "🏙️ Univerzita (3. svět)",
+      unlockCost: 10_000_000,
+      endingGoal: 10_000_000_000,
+      upgrades: [
+        { id: "student", label: "Student +250/s", baseCost: 50_000, effect: { perSecond: 250 } },
+        { id: "coffee", label: "Coffee +100/c", baseCost: 75_000, effect: { clickPower: 100 } },
+        { id: "scripts", label: "Scripts +750/s", baseCost: 500_000, effect: { perSecond: 750 } },
+        { id: "energy", label: "Energy Drink +300/c", baseCost: 1_500_000, effect: { clickPower: 300 } },
+        { id: "notebook", label: "Notebook +2 500/s", baseCost: 5_000_000, effect: { perSecond: 2500 } },
+        { id: "senior", label: "Senior Friend +1 000/c", baseCost: 25_000_000, effect: { clickPower: 1000 } },
+        { id: "professor", label: "Professor +10 000/s", baseCost: 50_000_000, effect: { perSecond: 10000 } }
+      ]
+    }
+  };
+
+  const defaultWorldState = (worldId) => {
+    const costs = {};
+    const owned = {};
+    for (const u of WORLD_DEFS[worldId].upgrades) {
+      costs[u.id] = u.baseCost;
+      owned[u.id] = 0;
+    }
+    return { costs, owned };
+  };
+
+  const defaultState = () => ({
+    money: 0,
+    gems: 0,
+    clickPower: 1,
+    perSecond: 0,
+    boost: 1,
+    gemLuck: 1,
+    activeBoosts: [],
+    currentWorld: 1,
+    maxUnlockedWorld: 1,
+    endings: { ending1: false, ending2: false },
+    stats: { clicks: 0, gemsFound: 0, tests: 0, parties: 0 },
+    worlds: {
+      1: defaultWorldState(1),
+      2: defaultWorldState(2),
+      3: defaultWorldState(3)
+    }
+  });
+
+  let state = loadState();
+
+  function loadState() {
+    const raw = localStorage.getItem(SAVE_KEY);
+    let loaded = null;
+    try {
+      loaded = raw ? JSON.parse(raw) : null;
+    } catch {
+      loaded = null;
+    }
+
+    const s = loaded && typeof loaded === "object" ? loaded : defaultState();
+
+    // Normalize top-level values
+    s.money = Number(s.money) || 0;
+    s.gems = Number(s.gems) || 0;
+    s.clickPower = Number(s.clickPower) || 1;
+    s.perSecond = Number(s.perSecond) || 0;
+    s.boost = Number(s.boost) || 1;
+    s.gemLuck = Number(s.gemLuck) || 1;
+    s.currentWorld = [1,2,3].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
+    s.maxUnlockedWorld = [1,2,3].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
+
+    s.endings = s.endings && typeof s.endings === "object" ? s.endings : { ending1:false, ending2:false };
+    s.endings.ending1 = !!s.endings.ending1;
+    s.endings.ending2 = !!s.endings.ending2;
+
+    s.stats = s.stats && typeof s.stats === "object" ? s.stats : { clicks:0, gemsFound:0, tests:0, parties:0 };
+    s.stats.clicks = Number(s.stats.clicks) || 0;
+    s.stats.gemsFound = Number(s.stats.gemsFound) || 0;
+    s.stats.tests = Number(s.stats.tests) || 0;
+    s.stats.parties = Number(s.stats.parties) || 0;
+
+    s.activeBoosts = Array.isArray(s.activeBoosts) ? s.activeBoosts : [];
+
+    s.worlds = s.worlds && typeof s.worlds === "object" ? s.worlds : {};
+    for (const worldId of [1,2,3]) {
+      if (!s.worlds[worldId]) s.worlds[worldId] = defaultWorldState(worldId);
+      if (!s.worlds[worldId].costs) s.worlds[worldId].costs = {};
+      if (!s.worlds[worldId].owned) s.worlds[worldId].owned = {};
+      for (const u of WORLD_DEFS[worldId].upgrades) {
+        if (typeof s.worlds[worldId].costs[u.id] !== "number" || !isFinite(s.worlds[worldId].costs[u.id])) {
+          s.worlds[worldId].costs[u.id] = u.baseCost;
+        }
+        if (typeof s.worlds[worldId].owned[u.id] !== "number" || !isFinite(s.worlds[worldId].owned[u.id])) {
+          s.worlds[worldId].owned[u.id] = 0;
+        }
+      }
+    }
+
+    purgeExpiredBoosts(s);
+    if (s.currentWorld > s.maxUnlockedWorld) s.currentWorld = s.maxUnlockedWorld;
+
+    return s;
+  }
+
+  function purgeExpiredBoosts(s = state) {
+    const now = Date.now();
+    s.activeBoosts = (s.activeBoosts || []).filter(b => b && Number(b.expiresAt) > now && Number(b.mult) > 0);
+    s.boost = s.activeBoosts.reduce((prod, b) => prod * Number(b.mult), 1);
+  }
+
+  function saveState() {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  }
+
+  function fmt(n) {
+    return Math.floor(Number(n) || 0).toLocaleString("cs-CZ");
+  }
+
+  function currentWorld() {
+    return WORLD_DEFS[state.currentWorld];
+  }
+
+  function worldData(worldId = state.currentWorld) {
+    return state.worlds[worldId];
+  }
+
+  function currentGoal() {
+    return state.endings.ending1 ? WORLD_DEFS[3].endingGoal : WORLD_DEFS[1].endingGoal;
+  }
+
+  function showMessage(text) {
+    const el = document.getElementById("eventMsg");
+    el.style.display = "block";
+    el.textContent = text;
+    clearTimeout(showMessage._timer);
+    showMessage._timer = setTimeout(() => {
+      el.style.display = "none";
+      el.textContent = "";
+    }, 4500);
+  }
+
+  function updateStats() {
+    document.getElementById("money").textContent = fmt(state.money);
+    document.getElementById("gems").textContent = fmt(state.gems);
+    document.getElementById("perSec").textContent = fmt(state.perSecond * state.boost);
+    document.getElementById("clickPower").textContent = fmt(state.clickPower);
+    document.getElementById("boostText").textContent = "x" + fmt(state.boost);
+    document.getElementById("paid").textContent = fmt(state.money);
+
+    const goal = currentGoal();
+    document.getElementById("goalLabel").textContent =
+      state.endings.ending1 ? "Cíl: 10 000 000 000 Kč" : "Cíl: 10 000 000 Kč";
+    document.getElementById("fill").style.width = Math.min((state.money / goal) * 100, 100) + "%";
+
+    document.getElementById("worldTitle").textContent = currentWorld().title;
+    document.getElementById("upgradeTitle").textContent = `📚 Upgrades (${currentWorld().title.split(" ").slice(-1)[0].replace("(", "").replace(")", "")})`;
+
+    document.getElementById("ending1").style.display = state.endings.ending1 ? "block" : "none";
+    document.getElementById("ending2").style.display = state.endings.ending2 ? "block" : "none";
+  }
+
+  function renderWorldControls() {
+    const c = document.getElementById("worldControls");
+    c.innerHTML = "";
+
+    for (const worldId of [1,2,3]) {
+      const def = WORLD_DEFS[worldId];
+      const unlocked = worldId <= state.maxUnlockedWorld;
+      const isCurrent = worldId === state.currentWorld;
+      const cost = def.unlockCost;
+      const nextWorldAllowed = worldId === state.maxUnlockedWorld + 1 || worldId <= state.maxUnlockedWorld;
+
+      let label = "";
+      let sub = "";
+
+      if (unlocked) {
+        label = isCurrent ? "Aktivní" : "Přepnout";
+        sub = "Odemčeno";
+      } else {
+        label = worldId === 2 ? "Odemknout svět 2" : "Odemknout svět 3";
+        sub = `${fmt(state.money)} / ${fmt(cost)} Kč`;
+      }
+
+      const pct = unlocked ? 100 : Math.min((state.money / cost) * 100, 100);
+      c.innerHTML += `
+        <div class="world-card ${isCurrent ? "active" : ""} ${unlocked ? "" : "locked"}">
+          <h4>${def.title}</h4>
+          <p>${sub}</p>
+          <div class="progress" style="margin:8px 0 10px"><div class="fill" style="width:${pct}%"></div></div>
+          <button class="worldbtn" ${nextWorldAllowed ? "" : "disabled"} onclick="handleWorldButton(${worldId})">${label}</button>
+        </div>
+      `;
+    }
+  }
+
+  function renderShop() {
+    const shop = document.getElementById("shop");
+    const w = worldData();
+    shop.innerHTML = "";
+
+    for (const u of WORLD_DEFS[state.currentWorld].upgrades) {
+      const cost = w.costs[u.id];
+      const owned = w.owned[u.id] || 0;
+      const text = `${u.label} (${fmt(cost)} Kč) [x${fmt(owned)}]`;
+      const btn = document.createElement("button");
+      btn.className = "shopbtn";
+      btn.textContent = text;
+      btn.onclick = () => buyUpgrade(u.id);
+      shop.appendChild(btn);
+    }
+  }
+
+  function renderGemShop() {
+    const gs = document.getElementById("gemShop");
+    gs.innerHTML = `
+      <button class="gembtn" onclick="buyTimeSkip(180,5)">3 min skip - 5💎</button>
+      <button class="gembtn" onclick="buyTimeSkip(300,7)">5 min skip - 7💎</button>
+      <button class="gembtn" onclick="buyTimeSkip(600,12)">10 min skip - 12💎</button>
+      <button class="gembtn" onclick="buyTimeSkip(1800,20)">30 min skip - 20💎</button>
+      <hr>
+      <button class="gembtn" onclick="buyBoost(2,180,10)">2x Cash 3 min - 10💎</button>
+      <button class="gembtn" onclick="buyBoost(3,120,15)">3x Cash 2 min - 15💎</button>
+      <hr>
+      <button class="gembtn" onclick="buyGemLuck(10,180,20)">10x Gem Luck 3 min - 20💎</button>
+      <button class="gembtn" onclick="buyGemLuck(20,90,30)">20x Gem Luck 1.5 min - 30💎</button>
+    `;
+  }
+
+  function renderBoosts() {
+    // Keep boost clean after expired entries
+    const boostList = document.getElementById("boostList");
+    if (!boostList) return;
+    boostList.innerHTML = "";
+    const now = Date.now();
+    const active = (state.activeBoosts || []).filter(b => Number(b.expiresAt) > now);
+    if (!active.length) {
+      boostList.innerHTML = `<div class="boost-item muted">Žádné aktivní boosty.</div>`;
+      return;
+    }
+    active.sort((a,b) => a.expiresAt - b.expiresAt).forEach(b => {
+      const left = Math.max(0, Math.ceil((b.expiresAt - now)/1000));
+      boostList.innerHTML += `<div class="boost-item">x${fmt(b.mult)} boost · zbývá ${left}s</div>`;
+    });
+  }
+
+  function checkEndings() {
+    if (!state.endings.ending1 && state.money >= 10_000_000) {
+      state.endings.ending1 = true;
+      showMessage("🏆 Ending 1: Splatil jsi dluh škole!");
+    } else if (state.endings.ending1 && !state.endings.ending2 && state.money >= 10_000_000_000) {
+      state.endings.ending2 = true;
+      showMessage("🌙 Ending 2: Koupil sis měsíční vilu!");
+    }
+  }
+
+  function update() {
+    purgeExpiredBoosts();
+    updateStats();
+    renderWorldControls();
+    renderShop();
+    renderGemShop();
+    renderBoosts();
+    checkEndings();
+    saveState();
+  }
+
+  function handleWorldButton(worldId) {
+    if (worldId <= state.maxUnlockedWorld) {
+      state.currentWorld = worldId;
+      update();
+      return;
+    }
+
+    const prevNeeded = worldId === 2 ? 1 : 2;
+    if (state.maxUnlockedWorld < prevNeeded) {
+      showMessage(worldId === 3 ? "Nejdřív odemkni svět 2." : "Nejdřív musíš mít svět 1.");
+      return;
+    }
+
+    const cost = WORLD_DEFS[worldId].unlockCost;
+    if (state.money < cost) {
+      showMessage(`Potřebuješ ${fmt(cost)} Kč na odemčení.`);
+      return;
+    }
+
+    state.money -= cost;
+    state.maxUnlockedWorld = worldId;
+    state.currentWorld = worldId;
+    showMessage(`🌍 Odemčen svět ${worldId}!`);
+    update();
+  }
+
+  function applyUpgradeEffect(effect) {
+    if (effect.clickPower) state.clickPower += effect.clickPower;
+    if (effect.perSecond) state.perSecond += effect.perSecond;
+    if (effect.perSecondDelta) state.perSecond = Math.max(0, state.perSecond + effect.perSecondDelta);
+  }
+
+  function buyUpgrade(upgradeId) {
+    const w = worldData();
+    const def = WORLD_DEFS[state.currentWorld].upgrades.find(u => u.id === upgradeId);
+    if (!def) return;
+
+    const cost = w.costs[upgradeId];
+    if (state.money < cost) return;
+
+    state.money -= cost;
+    w.owned[upgradeId] = (w.owned[upgradeId] || 0) + 1;
+    applyUpgradeEffect(def.effect);
+    w.costs[upgradeId] = Math.floor(cost * 1.25);
+    update();
+  }
+
+  function clickMoney() {
+    state.money += state.clickPower * state.boost;
+    state.stats.clicks += 1;
+
+    if (Math.random() < (0.001 * state.gemLuck)) {
+      state.gems += 1;
+      state.stats.gemsFound += 1;
+      showMessage("💎 Našel jsi gem!");
+    }
+
+    if (Math.random() < 0.01) {
+      state.stats.tests += 1;
+      if (Math.random() < 0.5) {
+        state.money *= 0.9;
+        showMessage("📝 Neoznámený test: -10 % peněz.");
+      } else {
+        state.money *= 1.1;
+        showMessage("🏫 Ředitel je nemocný: +10 % peněz.");
+      }
+    }
+
+    if (Math.random() < 0.0001) {
+      state.gems += 3;
+      state.stats.parties += 1;
+      const r = Math.random();
+      if (r < 0.5) {
+        state.gems += 0;
+        showMessage("🎉 Studentská párty! +3 💎");
+      } else if (r < 0.8) {
+        state.gems += 2;
+        showMessage("🎉 Studentská párty! +5 💎");
+      } else {
+        state.gems += 9;
+        showMessage("🎉 Legedární párty! +12 💎");
+      }
+    }
+
+    checkEndings();
+    update();
+  }
+
+  function buyTimeSkip(seconds, cost) {
+    if (state.gems < cost) {
+      showMessage("Nemáš dost gemů.");
+      return;
+    }
+    state.gems -= cost;
+    state.money += state.perSecond * state.boost * seconds;
+    update();
+  }
+
+  let boostSeq = 1;
+  function addTimedBoost(mult, durationMs) {
+    const id = `${Date.now()}_${boostSeq++}`;
+    state.activeBoosts.push({
+      id,
+      mult,
+      expiresAt: Date.now() + durationMs
+    });
+    purgeExpiredBoosts();
+    update();
+
+    setTimeout(() => {
+      state.activeBoosts = state.activeBoosts.filter(b => b.id !== id);
+      purgeExpiredBoosts();
+      update();
+    }, durationMs + 20);
+  }
+
+  function buyBoost(mult, durationSec, cost) {
+    if (state.gems < cost) {
+      showMessage("Nemáš dost gemů.");
+      return;
+    }
+    state.gems -= cost;
+    addTimedBoost(mult, durationSec * 1000);
+  }
+
+  
+  function buyGemLuck(mult, durationSec, cost) {
+    if (state.gems < cost) {
+      showMessage("Nemáš dost gemů.");
+      return;
+    }
+    state.gems -= cost;
+    state.gemLuck *= mult;
+    update();
+    setTimeout(() => {
+      state.gemLuck /= mult;
+      update();
+    }, durationSec * 1000);
+  }
+
+function buyDev() {
+    state.clickPower += 1_000_000;
+    state.perSecond += 1_000_000;
+    showMessage("🧪 DEV MODE aktivován!");
+    update();
+  }
+
+  window.handleWorldButton = handleWorldButton;
+  window.buyUpgrade = buyUpgrade;
+  window.clickMoney = clickMoney;
+  window.buyTimeSkip = buyTimeSkip;
+  window.buyBoost = buyBoost;
+  window.buyGemLuck = buyGemLuck;
+  window.buyDev = buyDev;
+
+  window.addEventListener("beforeunload", saveState);
+
+  setInterval(() => {
+    state.money += state.perSecond * state.boost;
+    update();
+  }, 1000);
+
+  // Initial render
+  update();
+})();
 </script>
 </body>
 </html>
