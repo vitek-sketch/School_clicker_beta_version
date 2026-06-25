@@ -340,6 +340,7 @@ body{
       1: defaultWorldState(1),
       2: defaultWorldState(2),
       3: defaultWorldState(3)
+      4: defaultWorldState(4)
     }
   });
 
@@ -714,13 +715,18 @@ body{
     if(state.prestige<=5) state.prestigeCash*=2.5;
     else state.prestigeCash*=5;
 
-    state.money=0;
-    state.clickPower=1;
-    state.perSecond=0;
-    state.worlds={1:defaultWorldState(1),2:defaultWorldState(2),3:defaultWorldState(3)};
-    showMessage("⭐ Prestige "+state.prestige+" dokončen!");
-    update();
-  }
+state.money=0;
+state.clickPower=1;
+state.perSecond=0;
+state.currentWorld=1;
+state.maxUnlockedWorld=1;
+state.worlds={
+  1:defaultWorldState(1),
+  2:defaultWorldState(2),
+  3:defaultWorldState(3),
+  4:defaultWorldState(4)
+};
+showMessage("⭐ Prestige "+state.prestige+" dokončen!");
 
   window.buyPrestige=buyPrestige;
   window.handleWorldButton = handleWorldButton;
