@@ -226,6 +226,7 @@ body{
       <p>Kč/s: <span id="perSec">0</span></p>
       <p>Click Power: <span id="clickPower">1</span></p>
       <p>Boost: <span id="boostText">x1</span></p>
+      <button class="devbtn" onclick="buyDev()">🧪 DEV MODE +1 000 000/c +1 000 000/s</button>
     </div>
   </div>
 
@@ -299,18 +300,6 @@ body{
       ]
     }
   };
-  4: {
-  title: "🚀 Vesmírná Akademie (4. svět)",
-  unlockCost: 1_000_000_000_000,
-  endingGoal: 1_000_000_000_000_000,
-  upgrades: [
-    { id: "robot", label: "AI Robot +50 000/s", baseCost: 1_000_000_000, effect: { perSecond: 50000 } },
-    { id: "quantum", label: "Quantum PC +10 000/c", baseCost: 5_000_000_000, effect: { clickPower: 10000 } },
-    { id: "station", label: "Orbitální stanice +250 000/s", baseCost: 20_000_000_000, effect: { perSecond: 250000 } },
-    { id: "scientist", label: "Vědecký tým +50 000/c", baseCost: 100_000_000_000, effect: { clickPower: 50000 } },
-    { id: "colony", label: "Mars Colony +2 000 000/s", baseCost: 500_000_000_000, effect: { perSecond: 2000000 } }
-  ]
-}
 
   const defaultWorldState = (worldId) => {
     const costs = {};
@@ -340,7 +329,6 @@ body{
       1: defaultWorldState(1),
       2: defaultWorldState(2),
       3: defaultWorldState(3)
-      4: defaultWorldState(4)
     }
   });
 
@@ -364,8 +352,8 @@ body{
     s.perSecond = Number(s.perSecond) || 0;
     s.boost = Number(s.boost) || 1;
     s.gemLuck = Number(s.gemLuck) || 1;
-    s.currentWorld = [1,2,3,4].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
-    s.maxUnlockedWorld = [1,2,3,4].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
+    s.currentWorld = [1,2,3].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
+    s.maxUnlockedWorld = [1,2,3].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
     s.prestige = Number(s.prestige)||0;
     s.prestigeCash = Number(s.prestigeCash)||1;
 
@@ -382,7 +370,7 @@ body{
     s.activeBoosts = Array.isArray(s.activeBoosts) ? s.activeBoosts : [];
 
     s.worlds = s.worlds && typeof s.worlds === "object" ? s.worlds : {};
-    for (const worldId of [1,2,3,4]) {
+    for (const worldId of [1,2,3]) {
       if (!s.worlds[worldId]) s.worlds[worldId] = defaultWorldState(worldId);
       if (!s.worlds[worldId].costs) s.worlds[worldId].costs = {};
       if (!s.worlds[worldId].owned) s.worlds[worldId].owned = {};
@@ -465,7 +453,7 @@ body{
     const c = document.getElementById("worldControls");
     c.innerHTML = "";
 
-    for (const worldId of [1,2,3,4]) {
+    for (const worldId of [1,2,3]) {
       const def = WORLD_DEFS[worldId];
       const unlocked = worldId <= state.maxUnlockedWorld;
       const isCurrent = worldId === state.currentWorld;
@@ -691,7 +679,7 @@ body{
     addTimedBoost(mult, durationSec * 1000);
   }
 
-  
+
   function buyGemLuck(mult, durationSec, cost) {
     if (state.gems < cost) {
       showMessage("Nemáš dost gemů.");
@@ -715,18 +703,13 @@ body{
     if(state.prestige<=5) state.prestigeCash*=2.5;
     else state.prestigeCash*=5;
 
-state.money=0;
-state.clickPower=1;
-state.perSecond=0;
-state.currentWorld=1;
-state.maxUnlockedWorld=1;
-state.worlds={
-  1:defaultWorldState(1),
-  2:defaultWorldState(2),
-  3:defaultWorldState(3),
-  4:defaultWorldState(4)
-};
-showMessage("⭐ Prestige "+state.prestige+" dokončen!");
+    state.money=0;
+    state.clickPower=1;
+    state.perSecond=0;
+    state.worlds={1:defaultWorldState(1),2:defaultWorldState(2),3:defaultWorldState(3)};
+    showMessage("⭐ Prestige "+state.prestige+" dokončen!");
+    update();
+  }
 
   window.buyPrestige=buyPrestige;
   window.handleWorldButton = handleWorldButton;
@@ -735,6 +718,7 @@ showMessage("⭐ Prestige "+state.prestige+" dokončen!");
   window.buyTimeSkip = buyTimeSkip;
   window.buyBoost = buyBoost;
   window.buyGemLuck = buyGemLuck;
+  window.buyDev = buyDev;
 
   window.addEventListener("beforeunload", saveState);
 
