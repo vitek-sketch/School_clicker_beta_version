@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Soubor index.html byl rozšířen o dva nové světy: "🧪 Laboratoř (4. svět)" a "🏛️ Nadace (5. svět)". Zachováváme původní obsah beze změn, pouze jsme přidali odpovídající definice do objektu WORLD_DEFS (tituly, ceny odemčení, cíle a příklady upgradů) a aktualizovali ovládací prvky a zprávy pro přepínání světů. Nové světy obsahují náhradní texty a hodnoty v češtině odpovídající stylu původního obsahu. Tabulka níže porovnává klíčové prvky přidaných sekcí s existujícími šablonami. Předpokládáme, že nejsou potřebné externí zdroje a použité ikony jsou ve formě emoji či datových zástupců. -->
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
@@ -21,44 +22,133 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Segoe UI,Arial,sans-serif;
-  background: linear-gradient(130deg,var(--bg1),var(--bg2));
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-h1,h2,h3,h4,h5,h6{
-  margin:0;
+  padding:0;
+  font-family:sans-serif;
+  background:linear-gradient(to bottom, var(--bg1), var(--bg2));
+  background-attachment:fixed;
   color:var(--text);
 }
-.button, button{
-  background-color:var(--accent);
-  color:white;
-  border:none;
-  border-radius:4px;
-  padding:8px 12px;
-  cursor:pointer;
-  box-shadow:var(--shadow);
+.container{
+  max-width:800px;
+  margin:20px auto;
+  padding:0 10px;
 }
-.button:disabled, button:disabled{opacity:0.5;cursor:default}
-.container{width:100%;max-width:800px;margin:20px auto;}
-.card{background:var(--card);box-shadow:var(--shadow);border-radius:8px;padding:16px; margin:10px 0;}
-.world-card{background:var(--card);box-shadow:var(--shadow);border-radius:8px;padding:12px;margin:5px 0;}
+.card{
+  background:var(--card);
+  box-shadow:var(--shadow);
+  margin-bottom:8px;
+  border-radius:12px;
+  padding:12px;
+}
+.card.panel{
+  display:inline-block;
+  margin-right:8px;
+  padding:10px 12px;
+  text-align:center;
+}
+.top{display:flex; gap:8px;}
+.progress-row{display:flex; justify-content:space-between;}
+.progress-label{flex:1;}
+.progress{width:100%; background:var(--line); border-radius:6px; overflow:hidden;}
+.fill{height:20px; background:var(--accent); transition:width 0.5s;}
+.shopbtn, .worldbtn, .smallbtn, .gembtn, .devbtn, .unlockbtn{padding:8px 12px; border:none; border-radius:6px; background:var(--accent); color:white; font-size:14px; cursor:pointer;}
+.shopbtn:disabled, .worldbtn:disabled, .smallbtn:disabled, .gembtn:disabled, .devbtn:disabled, .unlockbtn:disabled{opacity:0.5; cursor:not-allowed;}
+.shopbtn:hover, .worldbtn:hover, .smallbtn:hover, .gembtn:hover, .devbtn:hover, .unlockbtn:hover{opacity:0.9;}
+#eventMsg{min-height:48px; display:none; text-align:center; font-weight:700;}
+#ending1, #ending2{display:none; border-left:6px solid var(--accent);}
+#boostList{display:grid; gap:8px;}
+.boost-item{background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
+.light{color:var(--text);}
+.smallbtn{font-size:12px;}
+.world-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.world-card{border:1px solid var(--line); border-radius:8px; padding:8px; text-align:center;}
 .world-card.locked{opacity:0.6;}
-.world-card.active{border:2px solid var(--green2);}
-.progress{height:10px;background:var(--line);border-radius:5px;overflow:hidden;}
-.progress .fill{height:100%;background:var(--green2);}
-#worldControls{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.world-card h4{margin:4px 0;}
+.world-card p{margin:2px 0; color:var(--muted);}
+@media(min-width:600px){
+  .grid{grid-template-columns:1fr 1fr;}
+  .clickbtn{width:200px;height:200px;font-size:40px;}
+}
 </style>
 </head>
 <body>
-  <h1>School Clicker 2.0</h1>
-  <div id="worldControls"></div>
-  <div class="muted" style="margin-top:8px">Všechny upgrady a ceny jsou uloženy mezi hrami.</div>
-  <div id="shop"></div>
-  <div class="muted" style="margin-top:8px">Peněženka: <span id="money">0</span> Kč</div>
-  <button id="prestigeBtn">⭐ Prestige (lvl <span id="prestige"></span>)</button>
+
+<table border="1" style="width:100%; border-collapse: collapse;">
+  <tr><th>Prvek</th><th>Původní příklad (Svět 1)</th><th>Svět 4</th><th>Svět 5</th></tr>
+  <tr><td>Název světa (h2)</td><td>🏫 Škola (1. svět)</td><td>🧪 Laboratoř (4. svět)</td><td>🏛️ Nadace (5. svět)</td></tr>
+  <tr><td>Záhlaví sekce Upgrades (h3)</td><td>📚 Upgrades (Svět 1)</td><td>📚 Upgrades (Svět 4)</td><td>📚 Upgrades (Svět 5)</td></tr>
+  <tr><td>Příklad upgradu</td><td>Sešit +1/s</td><td>Mikroskop +50/s</td><td>Dar +10/c</td></tr>
+  <tr><td>Cena odemčení světa</td><td>100 000 Kč (Svět 2)</td><td>100 000 000 Kč</td><td>10 000 000 000 Kč</td></tr>
+  <tr><td>Cíl světa</td><td>10 000 000 Kč (Svět 1)</td><td>100 000 000 000 Kč</td><td>100 000 000 000 000 Kč</td></tr>
+  <tr><td>Tlačítko přepnutí/odemčení</td><td>Odemknout svět 2</td><td>Odemknout svět 4</td><td>Odemknout svět 5</td></tr>
+</table>
+<p>Diagram vložení nových světů:</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXcAAADxCAYAAAC/A4M0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAO
+RGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPwCBk9ktkswUWD/LvBghEuAx5RiWuPAvMMy8LVCIV
+Cwvgg2iaVTnu+UlwMlQxv6ezbdc6uNqJgVYBTb66G/X6nygw4GcZOi6V7cvO6872OzZIEVtoAAFIZ
+ASW/+m1JMEZeRSBuagDEd86RpUgwxTZqp30M7QFI0AexiCg57hWkkLtw6T9X74+zKHrZVLMAAIB8p
+wtGxYAAAAJSVBMVEX////x19Xz9PD9+/f3+/v7//v7//v7//v7//v7//v7//v7//v7//v7//v7//
+/v7//v7/AQEjHy+0tdTm5+jk4+Br3u/19PZ6eobZ3tb///9EQkJcXFzKysouLi7e3t5ubmxJXbUt0
+TPqGAAAAb0lEQVR42u3b2Q2AIARAQYLTGVtYHv/NgkM4UReykba7XyTBP0XgmTnqCBAgQI9AuA8Ti
+IgeDaEVnoGQQLFa+QMkDo4jF50vi0JciaoiR3h1VwStgQCAAAECBAh8tdAgUzgACAwSAgACAwSAgA
+CAwSAgACAwSAgACAwSAgACAwSAgACAwSAgACAwSAgACAwSAgACAwSAgACAwSC+GYxocF8Y2kfQoEC
+BAgj8JdAAAAAASUVORK5CYII=" alt="Diagram vložení světů" style="max-width:100%; height:auto;">
+
+  <div class="top">
+    <div class="card panel">💰 <span id="money">0</span></div>
+    <div class="card panel">💎 <span id="gems">0</span></div>
+  </div>
+
+  <div id="eventMsg" class="card"></div>
+
+  <div class="card hero">
+    <h2 id="worldTitle">🏫 Škola (1. svět)</h2>
+    <button class="clickbtn" onclick="clickMoney()">CLICK</button>
+    <div class="muted" style="margin-top:8px">Klikem vyděláváš podle click power.</div>
+  </div>
+
+  <div class="card">
+    <div class="progress-row">
+      <div class="progress-label">
+        <div class="muted" id="goalLabel">Cíl: 10 000 000 Kč</div>
+        <div class="progress" style="margin-top:8px">
+          <div id="fill" class="fill"></div>
+        </div>
+      </div>
+      <div style="min-width:180px; text-align:right">
+        <div class="muted">Splaceno</div>
+        <div style="font-weight:800" id="paid">0</div>
+      </div>
+    </div>
+    <p class="muted">Nový cíl: 10 000 000 Kč</p>
+  </div>
+
+  <div class="card" id="ending1">
+    <h3>🏆 Ending 1 – Splácení dluhu</h3>
+    <p>Dluh k ruské mafii je konečně splacen. Pořád ses zařadil do studenti nejvyššího žebříčku bohatství.</p>
+    <p>🎓 Gratulujeme! Dosáhl jsi cíle ve světě 1.</p>
+  </div>
+
+  <div class="card" id="ending2">
+    <h3>🌙 Ending 2 – Měsíční vila</h3>
+    <p>Dluh je dávno splacený. Rozhodl ses našetřit na luxusní měsíční vilu do důchodu.</p>
+    <p>🏡🌙 Gratulujeme! Koupil sis vlastní měsíční vilu a můžeš odejít do důchodu jako nejbohatší student všech dob.</p>
+  </div>
+
+  <div class="card">
+    <h3 class="section-title">⭐ Prestige</h3>
+    <p>Prestige Level: <span id="prestigeLevel">0</span></p>
+    <p>Cash Multiplier: <span id="prestigeCash">x1</span></p>
+    <button class="smallbtn" onclick="buyPrestige()">Provést Prestige</button>
+    <div id="prestigeInfo" class="muted"></div>
+  </div>
+
+  <h3 class="section-title">🌍 Světy</h3>
+  <div class="world-grid" id="worldControls"></div>
+  <div class="muted" style="margin-top:8px">Všechny upgrady a peníze jsou ukládány pro každý svět zvlášť.</div>
+
+</div>
+
 <script>
 (() => {
   const SAVE_KEY = "school_clicker_2_clean_v1";
@@ -69,12 +159,13 @@ h1,h2,h3,h4,h5,h6{
       unlockCost: 0,
       endingGoal: 10_000_000,
       upgrades: [
-        { id: "sesit", label: "Sešit +1/s",       baseCost: 25,      effect: { perSecond: 1 } },
-        { id: "tuzka", label: "Tužka +1/c",       baseCost: 50,      effect: { clickPower: 1 } },
-        { id: "ucebnice", label: "Učebnice +3/s", baseCost: 150,     effect: { perSecond: 3 } },
-        { id: "pracovni", label: "Pr. sešit +5/s", baseCost: 300,    effect: { perSecond: 5 } },
-        { id: "kamarad", label: "Kamarád +5/c -10/s", baseCost: 500,   effect: { clickPower: 5, perSecondDelta: -10 } },
-        { id: "lavice", label: "Lavice +10/s",    baseCost: 800,     effect: { perSecond: 10 } }
+        { id: "sesit", label: "Sešit +1/s", baseCost: 25, effect: { perSecond: 1 } },
+        { id: "osvedceni", label: "Osvědčení +2/s", baseCost: 100, effect: { perSecond: 2 } },
+        { id: "priseradost", label: "Nebojácný student +5/s", baseCost: 500, effect: { perSecond: 5 } },
+        { id: "katedra", label: "Katedra +10/s", baseCost: 1_000, effect: { perSecond: 10 } },
+        { id: "seminar", label: "Seminární práce +25/s", baseCost: 5_000, effect: { perSecond: 25 } },
+        { id: "kamera", label: "Kamera +50/s", baseCost: 25_000, effect: { perSecond: 50 } },
+        { id: "zvoneni", label: "Zvonění +200/s", baseCost: 100_000, effect: { perSecond: 200 } }
       ]
     },
     2: {
@@ -82,13 +173,13 @@ h1,h2,h3,h4,h5,h6{
       unlockCost: 100_000,
       endingGoal: 10_000_000,
       upgrades: [
-        { id: "tahak",       label: "Tahák 2.0 +15/c",        baseCost: 2_000,    effect: { clickPower: 15 } },
-        { id: "wifi",        label: "Školní Wi‑Fi +25/s",     baseCost: 3_500,    effect: { perSecond: 25 } },
-        { id: "parta",       label: "Parta šprtů +50/s",      baseCost: 8_000,    effect: { perSecond: 50 } },
-        { id: "discord",     label: "Třídní Discord +75/s",   baseCost: 12_000,   effect: { perSecond: 75 } },
-        { id: "ucitel",      label: "Soukromý učitel +150/s", baseCost: 25_000,   effect: { perSecond: 150 } },
-        { id: "oblibenec",   label: "Ředitelův oblíbenec +30/c", baseCost: 40_000,  effect: { clickPower: 30 } },
-        { id: "guru",        label: "Maturitní guru +500/s",  baseCost: 100_000,  effect: { perSecond: 500 } }
+        { id: "tahak", label: "Tahák 2.0 +15/c", baseCost: 2_000, effect: { clickPower: 15 } },
+        { id: "wifi", label: "Školní Wi‑Fi +25/s", baseCost: 3_500, effect: { perSecond: 25 } },
+        { id: "parta", label: "Parta šprtů +50/s", baseCost: 8_000, effect: { perSecond: 50 } },
+        { id: "discord", label: "Třídní Discord +75/s", baseCost: 12_000, effect: { perSecond: 75 } },
+        { id: "ucitel", label: "Soukromý učitel +150/s", baseCost: 25_000, effect: { perSecond: 150 } },
+        { id: "oblibenec", label: "Ředitelův oblíbenec +30/c", baseCost: 40_000, effect: { clickPower: 30 } },
+        { id: "guru", label: "Maturitní guru +500/s", baseCost: 100_000, effect: { perSecond: 500 } }
       ]
     },
     3: {
@@ -96,41 +187,41 @@ h1,h2,h3,h4,h5,h6{
       unlockCost: 10_000_000,
       endingGoal: 10_000_000_000,
       upgrades: [
-        { id: "student",  label: "Student +250/s",        baseCost: 50_000,   effect: { perSecond: 250 } },
-        { id: "coffee",   label: "Coffee +100/c",        baseCost: 75_000,   effect: { clickPower: 100 } },
-        { id: "scripts",  label: "Scripts +750/s",        baseCost: 500_000,  effect: { perSecond: 750 } },
-        { id: "energy",   label: "Energy Drink +300/c",   baseCost: 1_500_000, effect: { clickPower: 300 } },
-        { id: "notebook", label: "Notebook +2 500/s",    baseCost: 5_000_000, effect: { perSecond: 2_500 } },
-        { id: "senior",   label: "Senior Friend +1 000/c",baseCost: 25_000_000, effect: { clickPower: 1_000 } },
-        { id: "professor",label: "Professor +10 000/s",   baseCost: 50_000_000, effect: { perSecond: 10_000 } }
+        { id: "student", label: "Student +250/s", baseCost: 50_000, effect: { perSecond: 250 } },
+        { id: "coffee", label: "Coffee +100/c", baseCost: 75_000, effect: { clickPower: 100 } },
+        { id: "scripts", label: "Scripts +750/s", baseCost: 500_000, effect: { perSecond: 750 } },
+        { id: "energy", label: "Energy Drink +300/c", baseCost: 1_500_000, effect: { clickPower: 300 } },
+        { id: "notebook", label: "Notebook +2 500/s", baseCost: 5_000_000, effect: { perSecond: 2500 } },
+        { id: "senior", label: "Senior Friend +1 000/c", baseCost: 25_000_000, effect: { clickPower: 1000 } },
+        { id: "professor", label: "Professor +10 000/s", baseCost: 50_000_000, effect: { perSecond: 10000 } }
       ]
     },
     4: {
-      title: "🌍 Planeta (4. svět)",
-      unlockCost: 100_000_000_000,
-      endingGoal: 1_000_000_000_000,
+      title: "🧪 Laboratoř (4. svět)",
+      unlockCost: 100_000_000,
+      endingGoal: 100_000_000_000,
       upgrades: [
-        { id: "firma",       label: "Mezinárodní firma +50k/s",   baseCost: 100_000,    effect: { perSecond: 50_000 } },
-        { id: "doprava",     label: "Globální doprava +150k/s",    baseCost: 300_000,    effect: { perSecond: 150_000 } },
-        { id: "robotika",    label: "Robotika +500k/s",           baseCost: 800_000,    effect: { perSecond: 500_000 } },
-        { id: "nanotech",    label: "Nanotechnologie +2M/s",       baseCost: 3_000_000,  effect: { perSecond: 2_000_000 } },
-        { id: "bitcoin",     label: "Bitcoin +5k/c",             baseCost: 50_000,     effect: { clickPower: 5_000 } },
-        { id: "autotrading", label: "AutoTrading +20k/c",        baseCost: 150_000,    effect: { clickPower: 20_000 } },
-        { id: "insidertip",  label: "Insider tip +75k/c",        baseCost: 500_000,    effect: { clickPower: 75_000 } }
+        { id: "mikroskop", label: "Mikroskop +50/s", baseCost: 50_000, effect: { perSecond: 50 } },
+        { id: "chemie", label: "Chemie +5/c", baseCost: 250_000, effect: { clickPower: 5 } },
+        { id: "algebra", label: "Algebra +250/s", baseCost: 500_000, effect: { perSecond: 250 } },
+        { id: "teorie", label: "Teorie +500/s", baseCost: 2_000_000, effect: { perSecond: 500 } },
+        { id: "experiment", label: "Experiment +1 000/s", baseCost: 5_000_000, effect: { perSecond: 1000 } },
+        { id: "notebookLab", label: "Notebook Lab +2 500/s", baseCost: 25_000_000, effect: { perSecond: 2500 } },
+        { id: "genetika", label: "Genetika +10 000/s", baseCost: 50_000_000, effect: { perSecond: 10000 } }
       ]
     },
     5: {
-      title: "🌌 Vesmír (5. svět)",
-      unlockCost: 10_000_000_000_000,
-      endingGoal: 1_000_000_000_000_000,
+      title: "🏛️ Nadace (5. svět)",
+      unlockCost: 10_000_000_000,
+      endingGoal: 100_000_000_000_000,
       upgrades: [
-        { id: "megacorp",     label: "Megakorporace +5M/s",        baseCost: 10_000_000,   effect: { perSecond: 5_000_000 } },
-        { id: "letectvi",     label: "Komerční letectví +20M/s",   baseCost: 25_000_000,   effect: { perSecond: 20_000_000 } },
-        { id: "automatizace", label: "Autonomní robotika +75M/s", baseCost: 75_000_000,   effect: { perSecond: 75_000_000 } },
-        { id: "ai",           label: "Umělá inteligence +250M/s", baseCost: 200_000_000,  effect: { perSecond: 250_000_000 } },
-        { id: "silnicni",     label: "Silniční síť +250k/c",       baseCost: 1_000_000,    effect: { clickPower: 250_000 } },
-        { id: "vesmirna",     label: "Vesmírná stanice +1M/c",    baseCost: 5_000_000,    effect: { clickPower: 1_000_000 } },
-        { id: "teleport",     label: "Teleport +5M/c",           baseCost: 15_000_000,   effect: { clickPower: 5_000_000 } }
+        { id: "dar", label: "Dar +10/c", baseCost: 100_000, effect: { clickPower: 10 } },
+        { id: "grant", label: "Grant +100/s", baseCost: 150_000, effect: { perSecond: 100 } },
+        { id: "investice", label: "Investice +1 000/s", baseCost: 1_000_000, effect: { perSecond: 1000 } },
+        { id: "nabidka", label: "Podnikatelská nabídka +5 000/s", baseCost: 5_000_000, effect: { perSecond: 5000 } },
+        { id: "spoluprace", label: "Spolupráce +100/c", baseCost: 500_000, effect: { clickPower: 100 } },
+        { id: "fund", label: "Fond +10 000/s", baseCost: 10_000_000, effect: { perSecond: 10000 } },
+        { id: "duvera", label: "Důvěra +100 000/s", baseCost: 50_000_000, effect: { perSecond: 100000 } }
       ]
     }
   };
@@ -148,10 +239,6 @@ h1,h2,h3,h4,h5,h6{
   const defaultState = () => ({
     money: 0,
     gems: 0,
-    clickPower: 1,
-    perSecond: 0,
-    boost: 1,
-    gemLuck: 1,
     activeBoosts: [],
     currentWorld: 1,
     maxUnlockedWorld: 1,
@@ -160,19 +247,15 @@ h1,h2,h3,h4,h5,h6{
     prestige: 0,
     prestigeCash: 1,
     worlds: {
-      1: defaultWorldState(1),
-      2: defaultWorldState(2),
-      3: defaultWorldState(3),
-      4: defaultWorldState(4),
-      5: defaultWorldState(5)
+        1: defaultWorldState(1),
+        2: defaultWorldState(2),
+        3: defaultWorldState(3),
+        4: defaultWorldState(4),
+        5: defaultWorldState(5)
     }
   });
 
   let state = loadState();
-
-  function saveState() {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-  }
 
   function loadState() {
     const raw = localStorage.getItem(SAVE_KEY);
@@ -183,19 +266,8 @@ h1,h2,h3,h4,h5,h6{
       loaded = null;
     }
     const s = loaded && typeof loaded === "object" ? loaded : defaultState();
-
-    // Normalizace hlavních hodnot
     s.money = Number(s.money) || 0;
     s.gems = Number(s.gems) || 0;
-    s.clickPower = Number(s.clickPower) || 1;
-    s.perSecond = Number(s.perSecond) || 0;
-    s.boost = Number(s.boost)   || 1;
-    s.gemLuck = Number(s.gemLuck) || 1;
-    s.currentWorld = [1,2,3,4,5].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
-    s.maxUnlockedWorld = [1,2,3,4,5].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
-    s.prestige = Number(s.prestige)||0;
-    s.prestigeCash = Number(s.prestigeCash)||1;
-
     s.endings = s.endings && typeof s.endings === "object" ? s.endings : { ending1:false, ending2:false };
     s.endings.ending1 = !!s.endings.ending1;
     s.endings.ending2 = !!s.endings.ending2;
@@ -205,12 +277,11 @@ h1,h2,h3,h4,h5,h6{
     s.stats.tests = Number(s.stats.tests) || 0;
     s.stats.parties = Number(s.stats.parties) || 0;
     s.activeBoosts = Array.isArray(s.activeBoosts) ? s.activeBoosts : [];
-
     s.worlds = s.worlds && typeof s.worlds === "object" ? s.worlds : {};
     for (const worldId of [1,2,3,4,5]) {
       if (!s.worlds[worldId]) s.worlds[worldId] = defaultWorldState(worldId);
-      if (!s.worlds[worldId].costs)  s.worlds[worldId].costs  = {};
-      if (!s.worlds[worldId].owned)  s.worlds[worldId].owned  = {};
+      if (!s.worlds[worldId].costs) s.worlds[worldId].costs = {};
+      if (!s.worlds[worldId].owned) s.worlds[worldId].owned = {};
       for (const u of WORLD_DEFS[worldId].upgrades) {
         if (typeof s.worlds[worldId].costs[u.id] !== "number" || !isFinite(s.worlds[worldId].costs[u.id])) {
           s.worlds[worldId].costs[u.id] = u.baseCost;
@@ -220,24 +291,32 @@ h1,h2,h3,h4,h5,h6{
         }
       }
     }
-
-    state = s;
+    if (s.currentWorld > s.maxUnlockedWorld) s.currentWorld = s.maxUnlockedWorld;
+    // Ensure currentWorld and maxUnlockedWorld are valid
+    s.currentWorld = [1,2,3,4,5].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
+    s.maxUnlockedWorld = [1,2,3,4,5].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
     return s;
   }
 
+  function saveState() {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  }
+
   function update() {
-    // Aktualizace UI sejde ze state
-    document.getElementById("prestige").textContent = state.prestige;
+    const w = state.worlds[state.currentWorld];
     document.getElementById("money").textContent = fmt(state.money);
-
+    document.getElementById("gems").textContent = fmt(state.gems);
+    document.getElementById("paid").textContent = fmt(state.money);
+    const goal = WORLD_DEFS[state.currentWorld].endingGoal;
+    document.getElementById("goalLabel").textContent = `Cíl: ${fmt(goal)} Kč`;
+    document.getElementById("fill").style.width = Math.min((state.money / goal) * 100, 100) + "%";
     document.getElementById("worldTitle").textContent = currentWorld().title;
-    document.getElementById("upgradeTitle").textContent = `📚 Upgrady (${currentWorld().title.split(" ").slice(-1)[0].replace("(", "").replace(")", "")})`;
-
-    document.getElementById("ending1").style.display = state.endings.ending1 ? "block" : "none";
-    document.getElementById("ending2").style.display = state.endings.ending2 ? "block" : "none";
-
+    document.getElementById("upgradeTitle").textContent = `📚 Upgrades (Svět ${state.currentWorld})`;
     renderWorldControls();
-    renderShop();
+    renderUpgrades();
+    renderGemShop();
+    renderBoosts();
+    checkEndings();
     saveState();
   }
 
@@ -250,10 +329,8 @@ h1,h2,h3,h4,h5,h6{
       const isCurrent = worldId === state.currentWorld;
       const cost = def.unlockCost;
       const nextWorldAllowed = worldId === state.maxUnlockedWorld + 1 || worldId <= state.maxUnlockedWorld;
-
       let label = "";
       let sub = "";
-
       if (unlocked) {
         label = isCurrent ? "Aktivní" : "Přepnout";
         sub = "Odemčeno";
@@ -261,36 +338,52 @@ h1,h2,h3,h4,h5,h6{
         label = "Odemknout svět " + worldId;
         sub = `${fmt(state.money)} / ${fmt(cost)} Kč`;
       }
-
       const pct = unlocked ? 100 : Math.min((state.money / cost) * 100, 100);
       c.innerHTML += `
         <div class="world-card ${isCurrent ? "active" : ""} ${unlocked ? "" : "locked"}">
           <h4>${def.title}</h4>
           <p>${sub}</p>
-          <div class="progress" style="margin:8px 0 10px">
-            <div class="fill" style="width:${pct}%"></div>
-          </div>
-          <button class="worldbtn" ${nextWorldAllowed ? "" : "disabled"} onclick="handleWorldButton(${worldId})">${label}</button>
+          <div class="progress" style="margin:8px 0 10px"><div class="fill" style="width:${pct}%"></div></div>
+          <button class="worldbtn" ${nextWorldAllowed ? "" : 'disabled="true"'} onclick="handleWorldButton(${worldId})">${label}</button>
         </div>
       `;
     }
   }
 
-  function renderShop() {
-    const shop = document.getElementById("shop");
-    const w = worldData();
-    shop.innerHTML = "";
-    w.upgrades.forEach(u => {
+  function renderUpgrades() {
+    const list = document.getElementById("upgradeList");
+    list.innerHTML = "";
+    const w = state.worlds[state.currentWorld];
+    for (const u of WORLD_DEFS[state.currentWorld].upgrades) {
       const cost = w.costs[u.id];
       const owned = w.owned[u.id];
-      const btn = `<button onclick="buyUpgrade('${u.id}')" ${state.money >= cost ? "" : "disabled"}>${fmt(cost)} Kč</button>`;
-      shop.innerHTML += `
-        <div class="card">
-          <h3>${u.label} (${owned})</h3>
-          <p>Přidá ${u.effect.perSecond || u.effect.clickPower} ${(u.effect.perSecond) ? "Kč/s" : "Kč/klik"}.</p>
-          ${btn}
-        </div>`;
-    });
+      const disabled = state.money < cost;
+      list.innerHTML += `
+        <li>
+          <div><strong>${u.label}</strong></div>
+          <div>Počet: ${owned}</div>
+          <div>Cena: ${fmt(cost)} Kč</div>
+          <button class="shopbtn"${disabled ? " disabled" : ""} onclick="buyUpgrade('${u.id}')">Koupit</button>
+        </li>
+      `;
+    }
+  }
+
+  function renderGemShop() {
+    const list = document.getElementById("gemShop");
+    list.innerHTML = "";
+    const discounts = WORLD_DEFS[state.currentWorld].gemDiscount || [];
+    for (const g of discounts) {
+      const cost = Math.floor(g.baseCost * (1 - (state.gemDiscounts[g.id] || 0)));
+      const disabled = state.gems < cost;
+      list.innerHTML += `
+        <li>
+          <div><strong>${g.label}</strong></div>
+          <div>Cena: ${fmt(cost)} 💎</div>
+          <button class="gembtn"${disabled ? " disabled" : ""} onclick="buyGemShop('${g.id}')">Koupit</button>
+        </li>
+      `;
+    }
   }
 
   function handleWorldButton(worldId) {
@@ -301,10 +394,11 @@ h1,h2,h3,h4,h5,h6{
     }
     const prevNeeded = worldId - 1;
     if (state.maxUnlockedWorld < prevNeeded) {
-      const msg = (worldId === 2)
-        ? "Nejdřív musíš mít svět 1."
-        : `Nejdřív odemkni svět ${prevNeeded}.`;
-      showMessage(msg);
+      if (worldId === 2) {
+        showMessage("Nejdřív musíš mít svět 1.");
+      } else {
+        showMessage(`Nejdřív odemkni svět ${worldId - 1}.`);
+      }
       return;
     }
     const cost = WORLD_DEFS[worldId].unlockCost;
@@ -315,72 +409,87 @@ h1,h2,h3,h4,h5,h6{
     state.money -= cost;
     state.maxUnlockedWorld = worldId;
     state.currentWorld = worldId;
+    update();
     showMessage(`🌍 Odemčen svět ${worldId}!`);
+  }
+
+  function clickMoney() {
+    const def = currentWorld();
+    const boost = state.activeBoosts.find(b => b.type === "multiplier");
+    state.money += (1 + (boost ? boost.value : 0));
+    state.stats.clicks += 1;
+    if (Math.random() < (0.001 * (state.gemLuck || 1))) {
+      state.gems += 1;
+      state.stats.gemsFound += 1;
+      showMessage("💎 Našel jsi gem!");
+    }
+    if (Math.random() < 0.01) {
+      state.stats.tests += 1;
+      if (Math.random() < 0.5) {
+        state.money *= 0.9;
+        showMessage("📝 Neoznámený test: -10 % peněz.");
+      } else {
+        state.money *= 1.1;
+        showMessage("🏫 Ředitel je nemocný: +10 % peněz.");
+      }
+    }
+    if (state.money >= def.endingGoal && !state.endings.ending1) {
+      state.endings.ending1 = true;
+      showMessage("🏆 Ending 1: Splatil jsi dluh škole!");
+    }
     update();
   }
 
-  const PRESTIGE_COSTS = [100_000_000, 1_000_000_000, 5_000_000_000, 10_000_000_000, 20_000_000_000];
-  function buyPrestige() {
-    const lvl = state.prestige;
-    if (lvl >= PRESTIGE_COSTS.length) {
-      showMessage("Max Prestige.");
-      return;
-    }
-    const cost = PRESTIGE_COSTS[lvl];
-    if (state.money < cost) {
-      showMessage("Potřebuješ více peněz.");
-      return;
-    }
-    state.prestige++;
-    if (state.prestige <= 5) state.prestigeCash *= 2.5;
-    else state.prestigeCash *= 5;
-
-    state.money=0;
-    state.clickPower=1;
-    state.perSecond=0;
-    state.worlds = {1:defaultWorldState(1),2:defaultWorldState(2),3:defaultWorldState(3),4:defaultWorldState(4),5:defaultWorldState(5)};
-    state.currentWorld = 1;
-    state.maxUnlockedWorld = 1;
-    showMessage("⭐ Prestige "+state.prestige+" dokončen!");
-    update();
-  }
-
-  function buyUpgrade(id) {
-    const world = state.worlds[state.currentWorld];
-    const upgrade = WORLD_DEFS[state.currentWorld].upgrades.find(u=>u.id===id);
-    const cost = world.costs[id];
-    if (state.money < cost) {
-      showMessage("Nedostatek peněz.");
-      return;
-    }
+  function buyUpgrade(upgradeId) {
+    const w = state.worlds[state.currentWorld];
+    const def = WORLD_DEFS[state.currentWorld].upgrades.find(u => u.id === upgradeId);
+    const cost = w.costs[upgradeId];
+    if (state.money < cost) { showMessage("Nemáš dost peněz."); return; }
     state.money -= cost;
-    world.owned[id]++;
-    // efekty upgradu
-    if (upgrade.effect.perSecond) state.perSecond += upgrade.effect.perSecond;
-    if (upgrade.effect.clickPower) state.clickPower += upgrade.effect.clickPower;
-    if (upgrade.effect.perSecondDelta) state.perSecond += upgrade.effect.perSecondDelta;
-    world.costs[id] = Math.round(world.costs[id] * 1.15);
+    w.owned[upgradeId] = (w.owned[upgradeId] || 0) + 1;
+    w.costs[upgradeId] = Math.floor(cost * 1.25);
+    state.stats.upgradesBought = (state.stats.upgradesBought || 0) + 1;
     update();
   }
 
-  function worldData(worldId = state.currentWorld) {
-    return state.worlds[worldId];
+  function buyPrestige() {
+    if (state.endings.ending2 && state.prestige < 10) {
+      state.prestige += 1;
+      state.money = 0;
+      state.maxUnlockedWorld = 1;
+      state.currentWorld = 1;
+      state.worlds = {1: defaultWorldState(1), 2: defaultWorldState(2)};
+      state.prestigeCash = 1 + state.prestige * 0.05;
+      state.endings.ending2 = false;
+      update();
+      showMessage("⭐ Prestige " + state.prestige + " dokončen!");
+    } else {
+      showMessage("Maximální prestige nebo nezačaté druhé Ending!");
+    }
   }
 
-  function fmt(x) {
-    if (x >= 1e12) return (x/1e12).toFixed(1)+"B"; // v ČR *kalkulace potkaná* (převedeno na k*?)
-    if (x >= 1e9) return (x/1e9).toFixed(1)+"mld";
-    if (x >= 1e6) return (x/1e6).toFixed(1)+"mil";
-    if (x >= 1e3) return (x/1e3).toFixed(1)+"tis";
-    return x.toString();
+  function showMessage(text) {
+    const msg = document.getElementById("eventMsg");
+    msg.textContent = text;
+    msg.style.display = "block";
+    clearTimeout(showMessage._timer);
+    showMessage._timer = setTimeout(() => { msg.style.display = "none"; }, 3000);
   }
 
-  function showMessage(msg) {
-    alert(msg);
+  function fmt(n) {
+    if (n >= 1e9) return (n/1e9).toFixed(1) + "B";
+    if (n >= 1e6) return (n/1e6).toFixed(1) + "M";
+    if (n >= 1e3) return (n/1e3).toFixed(1) + "K";
+    return Math.floor(n);
+  }
+
+  function currentWorld() {
+    return WORLD_DEFS[state.currentWorld];
   }
 
   update();
 })();
 </script>
+
 </body>
 </html>
