@@ -138,9 +138,7 @@ body{
   padding:10px 12px;
 }
 .world-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:8px;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
 }
 .world-card{
   border:1px solid var(--line);
@@ -316,8 +314,8 @@ body{
 
     5: {
       title: "🚀 Vesmír (5. svět)",
-      unlockCost: 500_000_000_000,
-      endingGoal: 10_000_000_000_000,
+      unlockCost: 100_000_000_000,
+      endingGoal: 1_000_000_000_000,
       upgrades: [
         { id:"rocket", label:"Raketa +50 000 000/s", baseCost:100_000_000_000, effect:{perSecond:50000000}},
         { id:"moonmine", label:"Měsíční důl +250 000 000/s", baseCost:300_000_000_000, effect:{perSecond:250000000}},
@@ -325,7 +323,7 @@ body{
         { id:"station", label:"Orbitální stanice +5 000 000 000/s", baseCost:5_000_000_000_000, effect:{perSecond:5000000000}},
         { id:"galaxy", label:"Galaktická firma +25 000 000 000/s", baseCost:20_000_000_000_000, effect:{perSecond:25000000000}},
         { id:"planet", label:"Vlastní planeta +100 000 000/c", baseCost:75_000_000_000_000, effect:{clickPower:100000000}},
-        { id:"universe", label:"Vládce vesmíru +100 000 000 000/s", baseCost:250_000_000_000_000, effect:{perSecond:100000000000}}
+        { id:"universe", label:"Vládce vesmíru +1 000 000 000 000/s", baseCost:250_000_000_000_000, effect:{perSecond:100000000000}}
       ]
     }
 
@@ -442,10 +440,9 @@ body{
     return state.worlds[worldId];
   }
 
-  function currentGoal() {
-    return state.endings.ending1 ? WORLD_DEFS[3].endingGoal : WORLD_DEFS[1].endingGoal;
-  }
-
+function currentGoal() {
+    return WORLD_DEFS[state.currentWorld].endingGoal;
+}
   function showMessage(text) {
     const el = document.getElementById("eventMsg");
     el.style.display = "block";
@@ -493,13 +490,13 @@ body{
       let label = "";
       let sub = "";
 
-      if (unlocked) {
-        label = isCurrent ? "Aktivní" : "Přepnout";
-        sub = "Odemčeno";
-      } else {
-        label = worldId === 2 ? "Odemknout svět 2" : "Odemknout svět 3";
-        sub = `${fmt(state.money)} / ${fmt(cost)} Kč`;
-      }
+if (unlocked) {
+    label = isCurrent ? "Aktivní" : "Přepnout";
+    sub = "Odemčeno";
+} else {
+    label = `Odemknout svět ${worldId}`;
+    sub = `${fmt(state.money)} / ${fmt(cost)} Kč`;
+}
 
       const pct = unlocked ? 100 : Math.min((state.money / cost) * 100, 100);
       c.innerHTML += `
@@ -591,11 +588,11 @@ body{
       return;
     }
 
-    const prevNeeded = worldId === 2 ? 1 : 2;
+const prevNeeded = worldId - 1;
     if (state.maxUnlockedWorld < prevNeeded) {
-      showMessage(worldId === 3 ? "Nejdřív odemkni svět 2." : "Nejdřív musíš mít svět 1.");
-      return;
-    }
+    showMessage(`Nejdřív odemkni svět ${prevNeeded}.`);
+    return;
+}
 
     const cost = WORLD_DEFS[worldId].unlockCost;
     if (state.money < cost) {
@@ -740,6 +737,12 @@ body{
     showMessage("⭐ Prestige "+state.prestige+" dokončen!");
     update();
   }
+  function buyDev(){
+    state.money += 1000000;
+    state.clickPower += 1000000;
+    state.perSecond += 1000000;
+    update();
+}
 
   window.buyPrestige=buyPrestige;
   window.handleWorldButton = handleWorldButton;
