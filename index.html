@@ -299,7 +299,35 @@ body{
         { id: "professor", label: "Professor +10 000/s", baseCost: 50_000_000, effect: { perSecond: 10000 } }
       ]
     }
-  };
+      4: {
+      title: "🏢 Korporace (4. svět)",
+      unlockCost: 1_000_000_000,
+      endingGoal: 100_000_000_000,
+      upgrades: [
+        { id:"office", label:"Kancelář +50 000/s", baseCost:100_000_000, effect:{perSecond:50000}},
+        { id:"manager", label:"Manažer +10 000/c", baseCost:250_000_000, effect:{clickPower:10000}},
+        { id:"employees", label:"Zaměstnanci +250 000/s", baseCost:600_000_000, effect:{perSecond:250000}},
+        { id:"factory", label:"Továrna +1 000 000/s", baseCost:2_000_000_000, effect:{perSecond:1000000}},
+        { id:"ceo", label:"CEO +100 000/c", baseCost:5_000_000_000, effect:{clickPower:100000}},
+        { id:"corporation", label:"Korporace +5 000 000/s", baseCost:15_000_000_000, effect:{perSecond:5000000}},
+        { id:"empire", label:"Obchodní impérium +20 000 000/s", baseCost:40_000_000_000, effect:{perSecond:20000000}}
+      ]
+    },
+
+    5: {
+      title: "🚀 Vesmír (5. svět)",
+      unlockCost: 500_000_000_000,
+      endingGoal: 10_000_000_000_000,
+      upgrades: [
+        { id:"rocket", label:"Raketa +50 000 000/s", baseCost:100_000_000_000, effect:{perSecond:50000000}},
+        { id:"moonmine", label:"Měsíční důl +250 000 000/s", baseCost:300_000_000_000, effect:{perSecond:250000000}},
+        { id:"mars", label:"Kolonie Mars +1 000 000 000/s", baseCost:1_000_000_000_000, effect:{perSecond:1000000000}},
+        { id:"station", label:"Orbitální stanice +5 000 000 000/s", baseCost:5_000_000_000_000, effect:{perSecond:5000000000}},
+        { id:"galaxy", label:"Galaktická firma +25 000 000 000/s", baseCost:20_000_000_000_000, effect:{perSecond:25000000000}},
+        { id:"planet", label:"Vlastní planeta +100 000 000/c", baseCost:75_000_000_000_000, effect:{clickPower:100000000}},
+        { id:"universe", label:"Vládce vesmíru +100 000 000 000/s", baseCost:250_000_000_000_000, effect:{perSecond:100000000000}}
+      ]
+    }
 
   const defaultWorldState = (worldId) => {
     const costs = {};
@@ -328,7 +356,9 @@ body{
     worlds: {
       1: defaultWorldState(1),
       2: defaultWorldState(2),
-      3: defaultWorldState(3)
+      3: defaultWorldState(3),
+      4: defaultWorldState(4),
+      5: defaultWorldState(5)
     }
   });
 
@@ -352,8 +382,8 @@ body{
     s.perSecond = Number(s.perSecond) || 0;
     s.boost = Number(s.boost) || 1;
     s.gemLuck = Number(s.gemLuck) || 1;
-    s.currentWorld = [1,2,3].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
-    s.maxUnlockedWorld = [1,2,3].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
+    s.currentWorld = [1,2,3,4,5].includes(Number(s.currentWorld)) ? Number(s.currentWorld) : 1;
+    s.maxUnlockedWorld = [1,2,3,4,5].includes(Number(s.maxUnlockedWorld)) ? Number(s.maxUnlockedWorld) : 1;
     s.prestige = Number(s.prestige)||0;
     s.prestigeCash = Number(s.prestigeCash)||1;
 
@@ -370,7 +400,7 @@ body{
     s.activeBoosts = Array.isArray(s.activeBoosts) ? s.activeBoosts : [];
 
     s.worlds = s.worlds && typeof s.worlds === "object" ? s.worlds : {};
-    for (const worldId of [1,2,3]) {
+    for (const worldId of [1,2,3,4,5]) {
       if (!s.worlds[worldId]) s.worlds[worldId] = defaultWorldState(worldId);
       if (!s.worlds[worldId].costs) s.worlds[worldId].costs = {};
       if (!s.worlds[worldId].owned) s.worlds[worldId].owned = {};
@@ -453,7 +483,7 @@ body{
     const c = document.getElementById("worldControls");
     c.innerHTML = "";
 
-    for (const worldId of [1,2,3]) {
+    for (const worldId of [1,2,3,4,5]) {
       const def = WORLD_DEFS[worldId];
       const unlocked = worldId <= state.maxUnlockedWorld;
       const isCurrent = worldId === state.currentWorld;
